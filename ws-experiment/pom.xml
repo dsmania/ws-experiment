@@ -41,6 +41,8 @@
 
   <modules>
     <module>ws-experiment-server</module>
+    <module>ws-experiment-desktop-client</module>
+    <module>ws-experiment-web-client</module>
   </modules>
 
   <scm>
@@ -66,6 +68,8 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
     <serverModuleId>${project.code}-server</serverModuleId>
+    <webClientModuleId>${project.code}-web-client</webClientModuleId>
+    <desktopClientModuleId>${project.code}-desktop-client</desktopClientModuleId>
 
     <ejb.version>3.1</ejb.version>
     <el.version>2.2</el.version>
@@ -77,6 +81,8 @@
     <jsf.version>2.0</jsf.version>
     <junit.version>4.12</junit.version>
     <lombok.version>1.16.4</lombok.version>
+    <servlet.version>3.0</servlet.version>
+    <threeten.version>1.2</threeten.version>
 
     <maven-clean-plugin.version>2.6.1</maven-clean-plugin.version>
     <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
@@ -100,6 +106,11 @@
         <version>${javaee-api.version}</version>
       </dependency>
       <dependency>
+        <groupId>org.threeten</groupId>
+        <artifactId>threetenbp</artifactId>
+        <version>${threeten.version}</version>
+      </dependency>
+      <dependency>
         <groupId>org.projectlombok</groupId>
         <artifactId>lombok</artifactId>
         <version>${lombok.version}</version>
@@ -111,6 +122,17 @@
         <artifactId>${serverModuleId}</artifactId>
         <version>${project.version}</version>
         <type>war</type>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>${webClientModuleId}</artifactId>
+        <version>${project.version}</version>
+        <type>war</type>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>${desktopClientModuleId}</artifactId>
+        <version>${project.version}</version>
       </dependency>
 
       <dependency>
@@ -173,11 +195,27 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
           <version>${maven-javadoc-plugin.version}</version>
+          <executions>
+            <execution>
+              <id>attach-javadoc</id>
+              <goals>
+                <goal>jar</goal>
+              </goals>
+            </execution>
+          </executions>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-source-plugin</artifactId>
           <version>${maven-source-plugin.version}</version>
+          <executions>
+            <execution>
+              <id>attach-sources</id>
+              <goals>
+                <goal>jar</goal>
+              </goals>
+            </execution>
+          </executions>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -204,6 +242,11 @@
           </configuration>
         </plugin>
         <plugin>
+          <groupId>org.glassfish.embedded</groupId>
+          <artifactId>maven-embedded-glassfish-plugin</artifactId>
+          <version>${maven-embedded-glassfish-plugin.version}</version>
+        </plugin>
+        <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-clean-plugin</artifactId>
           <version>${maven-clean-plugin.version}</version>
@@ -212,12 +255,6 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
           <version>${maven-surefire-plugin.version}</version>
-        </plugin>
-
-        <plugin>
-          <groupId>org.glassfish.embedded</groupId>
-          <artifactId>maven-embedded-glassfish-plugin</artifactId>
-          <version>${maven-embedded-glassfish-plugin.version}</version>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -241,11 +278,14 @@
 
     <profile>
       <id>server</id>
-      <activation>
-        <property>
-          <name>server</name>
-        </property>
-      </activation>
+    </profile>
+
+    <profile>
+      <id>web-client</id>
+    </profile>
+
+    <profile>
+      <id>desktop-client</id>
     </profile>
 
   </profiles>

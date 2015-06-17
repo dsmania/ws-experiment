@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html
+ xmlns="http://www.w3.org/1999/xhtml"
+ xmlns:h="http://java.sun.com/jsf/html"
+ xmlns:f="http://java.sun.com/jsf/core"
+ xmlns:ui="http://java.sun.com/jsf/facelets">
+
+  <h:head>
+    <title>#{messages.title}</title>
+    <meta charset="UTF-8" />
+  </h:head>
+
+  <h:body>
+    <h:outputStylesheet name="ws-experiment.css" library="css" />
+
+    <h:form id="colorForm" styleClass="content">
+      <h1 class="title">#{messages.title}</h1>
+      <h:dataTable id="log" value="#{colorService.getLastColors(16)}" var="color" styleClass="log">
+        <h:column>
+          <h:outputFormat value="#{messages.containsKey(color.id) ? messages[color.id] : color.id}" style="color: #{color.rgb};" />
+        </h:column>
+      </h:dataTable>
+      <div class="buttons">
+        <h:commandButton id="redButton" value="#{messages.red}" action="#{colorService.submitColor('FF0000')}" styleClass="red" />
+        <h:commandButton id="greenButton" value="#{messages.green}" action="#{colorService.submitColor('00FF00')}" styleClass="green" />
+        <h:commandButton id="blueButton" value="#{messages.blue}" action="#{colorService.submitColor('0000FF')}" styleClass="blue" />
+      </div>
+    </h:form>
+  </h:body>
+
+</html>

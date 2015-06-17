@@ -7,20 +7,15 @@
     <artifactId>ws-experiment</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>ws-experiment-server</artifactId>
-  <packaging>war</packaging>
+  <artifactId>ws-experiment-desktop-client</artifactId>
 
-  <name>WS Experiment: Server</name>
+  <name>WS Experiment: Desktop client</name>
 
   <properties>
     <project.rootdir>${project.basedir}/..</project.rootdir>
   </properties>
 
   <dependencies>
-    <dependency>
-      <groupId>javax</groupId>
-      <artifactId>javaee-api</artifactId>
-    </dependency>
     <dependency>
       <groupId>org.threeten</groupId>
       <artifactId>threetenbp</artifactId>
@@ -60,10 +55,6 @@
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-war-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-clean-plugin</artifactId>
       </plugin>
     </plugins>
@@ -72,33 +63,7 @@
   <profiles>
 
     <profile>
-      <id>server</id>
-
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.glassfish.embedded</groupId>
-            <artifactId>maven-embedded-glassfish-plugin</artifactId>
-            <configuration>
-              <name>${project.code}</name>
-              <app>${project.build.directory}/${project.artifactId}-${project.version}.war</app>
-              <contextRoot>${project.code}</contextRoot>
-              <ports>
-                <http-listener>8080</http-listener>
-                <https-listener>8181</https-listener>
-              </ports>
-            </configuration>
-            <executions>
-              <execution>
-                <phase>pre-integration-test</phase>
-                <goals>
-                  <goal>run</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
+      <id>desktop-client</id>
     </profile>
 
   </profiles>

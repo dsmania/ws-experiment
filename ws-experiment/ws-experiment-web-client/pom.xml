@@ -7,10 +7,10 @@
     <artifactId>ws-experiment</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>ws-experiment-server</artifactId>
+  <artifactId>ws-experiment-web-client</artifactId>
   <packaging>war</packaging>
 
-  <name>WS Experiment: Server</name>
+  <name>WS Experiment: Web client</name>
 
   <properties>
     <project.rootdir>${project.basedir}/..</project.rootdir>
@@ -72,30 +72,13 @@
   <profiles>
 
     <profile>
-      <id>server</id>
+      <id>web-client</id>
 
       <build>
         <plugins>
           <plugin>
             <groupId>org.glassfish.embedded</groupId>
             <artifactId>maven-embedded-glassfish-plugin</artifactId>
-            <configuration>
-              <name>${project.code}</name>
-              <app>${project.build.directory}/${project.artifactId}-${project.version}.war</app>
-              <contextRoot>${project.code}</contextRoot>
-              <ports>
-                <http-listener>8080</http-listener>
-                <https-listener>8181</https-listener>
-              </ports>
-            </configuration>
-            <executions>
-              <execution>
-                <phase>pre-integration-test</phase>
-                <goals>
-                  <goal>run</goal>
-                </goals>
-              </execution>
-            </executions>
           </plugin>
         </plugins>
       </build>
