@@ -18,7 +18,7 @@
       <h1 class="title">#{messages.title}</h1>
       <h:dataTable id="log" value="#{colorService.getLastColors(16)}" var="color" styleClass="log">
         <h:column>
-          <h:outputFormat value="#{messages.containsKey(color.id) ? messages[color.id] : color.id}" style="color: #{color.rgb};" />
+          <h:outputFormat value="[#{color.dateTime}] #{color.session}: #{messages.containsKey(color.id) ? messages[color.id] : color.id}" style="color: #{color.rgb};" />
         </h:column>
       </h:dataTable>
       <div class="buttons">

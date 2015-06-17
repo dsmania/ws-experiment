@@ -67,8 +67,8 @@ h1 {
 }
 
 input[type=button], input[type=submit], input[type=reset], button {
-    width: 100px;
-    height: 60px;
+    min-width: 100px;
+    min-height: 60px;
 
     padding: 5px 15px;
 
@@ -95,7 +95,7 @@ input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover, but
 }
 
 .content {
-    min-width: 350px;
+    min-width: 700px;
     min-height: 500px;
 
     display: -webkit-box;
@@ -146,8 +146,30 @@ input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover, but
     flex: 1.0;
 
     font-family: Courier, monospace;
+    text-align: left;
 
-	background-color: #e0e0e0;
+	background-color: #c0c0c0;
+
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    user-select: text;
+    cursor: text;
+}
+.content .log * {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    user-select: text;
+	cursor: text;
+}
+.content .log * ::-moz-selection {
+	color: #ffffff;
+
+    background: #404040;
+}
+.content .log * ::selection {
+    color: #ffffff;
+
+    background: #404040;
 }
 
 .content .buttons {
@@ -167,6 +189,12 @@ input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover, but
     align-items: stretch;
 
 	background-color: #000000;
+}
+.content .buttons * {
+    -moz-box-flex: 1.0;
+    box-flex: 1.0;
+    -webkit-flex: 1.0;
+    flex: 1.0;
 }
 
 .content .buttons .red {
