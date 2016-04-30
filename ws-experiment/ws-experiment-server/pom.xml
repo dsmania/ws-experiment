@@ -22,13 +22,8 @@
       <artifactId>javaee-api</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.threeten</groupId>
-      <artifactId>threetenbp</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <scope>provided</scope>
     </dependency>
   </dependencies>
 
@@ -87,13 +82,6 @@
           <plugin>
             <groupId>org.glassfish.embedded</groupId>
             <artifactId>maven-embedded-glassfish-plugin</artifactId>
-            <dependencies>
-              <dependency>
-                <groupId>org.glassfish.main.extras</groupId>
-                <artifactId>glassfish-embedded-all</artifactId>
-                <version>${glassfish.version}</version>
-              </dependency>
-            </dependencies>
             <configuration>
               <ports>
                 <http-listener>8080</http-listener>

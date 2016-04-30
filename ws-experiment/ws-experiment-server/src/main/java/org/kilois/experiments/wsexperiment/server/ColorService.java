@@ -1,6 +1,8 @@
 package org.kilois.experiments.wsexperiment.server;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,8 +16,7 @@ import javax.jws.WebResult;
 import javax.jws.WebService;
 import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotNull;
-import org.threeten.bp.LocalDateTime;
-import org.threeten.bp.format.DateTimeParseException;
+import javax.xml.bind.annotation.XmlElement;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -41,7 +42,7 @@ public class ColorService implements Serializable {
         super();
     }
 
-    @WebMethod(exclude = true) // Not required by Java EE. Due to GlassFish bug
+    @WebMethod(exclude = true)
     public java.awt.Color submitColor(@NotNull String hexRgb) {
         String rgb = (hexRgb.startsWith("#")) ? hexRgb.substring(1) : hexRgb;
         java.awt.Color color = java.awt.Color.decode("0x" + rgb);
@@ -51,12 +52,12 @@ public class ColorService implements Serializable {
         return color;
     }
 
-    @WebMethod(exclude = true) // Not required by Java EE. Due to GlassFish bug
+    @WebMethod(exclude = true)
     public List<ColorEntry> getLastColors(String count) {
         return getLastColors(Integer.parseInt(count));
     }
 
-    @WebMethod(exclude = true) // Not required by Java EE. Due to GlassFish bug
+    @WebMethod(exclude = true)
     public List<ColorEntry> getLastColors(int count) {
         List<ColorEntry> lastColors = new ArrayList<ColorEntry>();
         int entriesSize = ENTRIES.size();
@@ -72,25 +73,12 @@ public class ColorService implements Serializable {
     }
 
     @WebMethod
-    @WebResult(name = "resultsResponse")
-    public ColorResponse getColorsByCount(@WebParam(name = "resultsRequest") ColorRequest request) {
-        ColorResponse response = new ColorResponse();
-
-        if (request == null) {
-//          request = new ColorRequest();
-//          request.setCount(3);
-            response.setError("Request is null");
-            return response;
-        }
-
-        Integer requestCount = request.getCount();
-        if (requestCount == null) {
-            response.setError("Count not specified");
-            return response;
-        }
+    @WebResult(name = "colors")
+    public Colors getColorsByCount(int count) {
+        Colors response = new Colors();
 
         int entriesSize = ENTRIES.size();
-        int minIndex = entriesSize - requestCount.intValue();
+        int minIndex = entriesSize - count;
         if (minIndex < 0) {
             minIndex = 0;
         }
@@ -98,56 +86,46 @@ public class ColorService implements Serializable {
         for (int i = entriesSize - 1; i >= minIndex; i--) {
             ColorEntry entry = ENTRIES.get(i);
             colors.add(new Color(entry.getId(), entry.getRgb()));
-            response.setStartDateTime(entry.getDateTime());
-            if (response.getEndDateTime() == null) {
-                response.setEndDateTime(entry.getDateTime());
+            response.setStart(entry.getDateTime());
+            if (response.getEnd() == null) {
+                response.setEnd(entry.getDateTime());
             }
         }
-        response.setColor(colors);
+        response.setColors(colors);
 
         return response;
     }
 
     @WebMethod
-    @WebResult(name = "resultsResponse")
-    public ColorResponse getColorsByDateTime(@WebParam(name = "resultsRequest") ColorRequest request) {
-        ColorResponse response = new ColorResponse();
+    @WebResult(name = "colors")
+    public Colors getColorsByDateTime(@WebParam(name = "start") String start, @WebParam(name = "end") String end) {
+        Colors response = new Colors();
 
-        if (request == null) {
-//          request = new ColorRequest();
-//          request.setStartDateTime(ColorEntry.FORMATTER.format(LocalDateTime.now().minusMinutes(5)));
-//          request.setEndDateTime(ColorEntry.FORMATTER.format(LocalDateTime.now()));
-            response.setError("Request is null");
-            return response;
-        }
-
-        String requestStartDateTime = request.getStartDateTime();
-        if (requestStartDateTime == null) {
-            response.setError("Start date time not specified");
+        if (start == null) {
+            response.setError("Start date-time not specified");
             return response;
         }
         LocalDateTime startDateTime;
         try {
-            startDateTime = LocalDateTime.parse(requestStartDateTime, ColorEntry.FORMATTER);
+            startDateTime = LocalDateTime.parse(start, ColorEntry.FORMATTER);
         } catch (DateTimeParseException e) {
             response.setError("Bad start date-time format");
             return response;
         }
-        String requestEndDateTime = request.getEndDateTime();
-        if (requestEndDateTime == null) {
+        if (end == null) {
             response.setError("End date-time not specified");
             return response;
         }
         LocalDateTime endDateTime;
         try {
-            endDateTime = LocalDateTime.parse(requestEndDateTime, ColorEntry.FORMATTER);
+            endDateTime = LocalDateTime.parse(end, ColorEntry.FORMATTER);
         } catch (DateTimeParseException e) {
             response.setError("Bad end date-time format");
             return response;
         }
 
-        response.setStartDateTime(requestStartDateTime);
-        response.setEndDateTime(requestEndDateTime);
+        response.setStart(start);
+        response.setEnd(end);
 
         List<Color> colors = new ArrayList<Color>();
         for (ColorEntry entry : ENTRIES) {
@@ -160,7 +138,7 @@ public class ColorService implements Serializable {
 
             colors.add(new Color(entry.getId(), entry.getRgb()));
         }
-        response.setColor(colors);
+        response.setColors(colors);
 
         return response;
     }
@@ -185,18 +163,24 @@ public class ColorService implements Serializable {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    @EqualsAndHashCode(of = { "startDateTime", "endDateTime" }, callSuper = false)
-    public static class ColorResponse implements Serializable  {
+    @EqualsAndHashCode(of = { "start", "end" }, callSuper = false)
+    public static class Colors implements Serializable {
 
         private static final long serialVersionUID = -1494087812886577950L;
 
-        private String startDateTime;
+        private String start;
 
-        private String endDateTime;
+        private String end;
 
         private String error;
 
-        private List<Color> color; // Properly, it should be "colors". Changed to simplify transform by JAX-WS
+        //@Getter(onMethod = @__({@XmlElement(name = "color")})) // Not working
+        private List<Color> colors;
+
+        @XmlElement(name = "color")
+        public List<Color> getColors() {
+            return this.colors;
+        }
 
     }
 

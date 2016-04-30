@@ -22,13 +22,8 @@
       <artifactId>javaee-api</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.threeten</groupId>
-      <artifactId>threetenbp</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <scope>provided</scope>
     </dependency>
   </dependencies>
 
@@ -61,6 +56,14 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
+        <configuration>
+          <webResources>
+            <webResource>
+              <directory>${basedir}/src/main/webapp</directory>
+              <filtering>true</filtering>
+            </webResource>
+          </webResources>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -79,6 +82,26 @@
           <plugin>
             <groupId>org.glassfish.embedded</groupId>
             <artifactId>maven-embedded-glassfish-plugin</artifactId>
+            <configuration>
+              <ports>
+                <http-listener>8080</http-listener>
+                <https-listener>8181</https-listener>
+              </ports>
+            </configuration>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>deploy</goal>
+                  <goal>run</goal>
+                </goals>
+                <configuration>
+                  <name>${project.artifactId}</name>
+                  <app>${project.build.directory}/${project.build.finalName}.war</app>
+                  <contextRoot>/${project.code}-client</contextRoot>
+                  <autoDelete>true</autoDelete>
+                </configuration>
+              </execution>
+            </executions>
           </plugin>
         </plugins>
       </build>
