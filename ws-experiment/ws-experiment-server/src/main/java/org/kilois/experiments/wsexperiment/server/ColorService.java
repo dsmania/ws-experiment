@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 
 @Named("colorService")
 @ApplicationScoped
-@WebService(serviceName = "ws-experiment-ws", portName = "ws-experiment-ws-port", targetNamespace = "wsexperiment")
+@WebService(serviceName = "colors-ws", portName = "colors-ws-port", targetNamespace = "org.kilois.experiments")
 public class ColorService implements Serializable {
 
     private static final long serialVersionUID = 6085152634656601410L;
@@ -130,19 +130,19 @@ public class ColorService implements Serializable {
         try {
             startDateTime = LocalDateTime.parse(requestStartDateTime, ColorEntry.FORMATTER);
         } catch (DateTimeParseException e) {
-            response.setError("Bad start date time format");
+            response.setError("Bad start date-time format");
             return response;
         }
         String requestEndDateTime = request.getEndDateTime();
         if (requestEndDateTime == null) {
-            response.setError("End date time not specified");
+            response.setError("End date-time not specified");
             return response;
         }
         LocalDateTime endDateTime;
         try {
             endDateTime = LocalDateTime.parse(requestEndDateTime, ColorEntry.FORMATTER);
         } catch (DateTimeParseException e) {
-            response.setError("Bad end date time format");
+            response.setError("Bad end date-time format");
             return response;
         }
 

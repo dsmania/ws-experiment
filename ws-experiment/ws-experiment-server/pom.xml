@@ -61,6 +61,14 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
+        <configuration>
+          <webResources>
+            <webResource>
+              <directory>${basedir}/src/main/webapp</directory>
+              <filtering>true</filtering>
+            </webResource>
+          </webResources>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -79,10 +87,14 @@
           <plugin>
             <groupId>org.glassfish.embedded</groupId>
             <artifactId>maven-embedded-glassfish-plugin</artifactId>
+            <dependencies>
+              <dependency>
+                <groupId>org.glassfish.main.extras</groupId>
+                <artifactId>glassfish-embedded-all</artifactId>
+                <version>${glassfish.version}</version>
+              </dependency>
+            </dependencies>
             <configuration>
-              <name>${project.code}</name>
-              <app>${project.build.directory}/${project.artifactId}-${project.version}.war</app>
-              <contextRoot>${project.code}</contextRoot>
               <ports>
                 <http-listener>8080</http-listener>
                 <https-listener>8181</https-listener>
@@ -90,10 +102,16 @@
             </configuration>
             <executions>
               <execution>
-                <phase>pre-integration-test</phase>
                 <goals>
+                  <goal>deploy</goal>
                   <goal>run</goal>
                 </goals>
+                <configuration>
+                  <name>${project.artifactId}</name>
+                  <app>${project.build.directory}/${project.build.finalName}.war</app>
+                  <contextRoot>/${project.code}</contextRoot>
+                  <autoDelete>true</autoDelete>
+                </configuration>
               </execution>
             </executions>
           </plugin>

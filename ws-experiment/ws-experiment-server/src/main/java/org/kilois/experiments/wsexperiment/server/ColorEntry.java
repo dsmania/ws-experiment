@@ -1,12 +1,9 @@
 package org.kilois.experiments.wsexperiment.server;
 
 import java.awt.Color;
-
 import javax.validation.constraints.NotNull;
-
 import org.threeten.bp.LocalDateTime;
 import org.threeten.bp.format.DateTimeFormatter;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
