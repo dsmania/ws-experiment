@@ -3,7 +3,6 @@ package org.kilois.experiments.wsexperiment.server;
 import java.awt.Color;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,9 +14,7 @@ import lombok.NonNull;
 @NoArgsConstructor
 public class ColorEntry implements Comparable<ColorEntry> {
 
-    protected static final DateTimeFormatter FORMATTER = new DateTimeFormatterBuilder()
-            .append(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
-            .append(DateTimeFormatter.ISO_LOCAL_DATE_TIME).toFormatter();
+    protected static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
     @NonNull
 	private String id;

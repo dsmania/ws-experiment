@@ -95,7 +95,7 @@ input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover, but
 }
 
 .content {
-    min-width: 700px;
+    min-width: 750px;
     min-height: 510px;
 
     display: -webkit-box;

@@ -41,8 +41,8 @@
 
   <modules>
     <module>ws-experiment-server</module>
-    <module>ws-experiment-desktop-client</module>
     <module>ws-experiment-web-client</module>
+    <module>ws-experiment-desktop-client</module>
   </modules>
 
   <scm>
@@ -92,6 +92,7 @@
     <maven-jar-plugin.version>2.6</maven-jar-plugin.version>
     <maven-jarsigner-plugin.version>1.4</maven-jarsigner-plugin.version>
     <maven-javadoc-plugin.version>2.10.3</maven-javadoc-plugin.version>
+    <jaxws-maven-plugin.version>2.4.1</jaxws-maven-plugin.version>
     <maven-resources-plugin.version>2.7</maven-resources-plugin.version>
     <maven-source-plugin.version>3.0.0</maven-source-plugin.version>
     <maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
@@ -237,6 +238,11 @@
             <version>${javaee.version}</version>
             <filtering>true</filtering>
           </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>jaxws-maven-plugin</artifactId>
+          <version>${jaxws-maven-plugin.version}</version>
         </plugin>
         <plugin>
           <groupId>org.glassfish.embedded</groupId>

@@ -95,8 +95,8 @@ input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover, but
 }
 
 .content {
-    min-width: 700px;
-    min-height: 510px;
+    min-width: 300px;
+    min-height: 300px;
 
     display: -webkit-box;
     display: -webkit-flex;
@@ -195,37 +195,4 @@ input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover, but
     box-flex: 1.0;
     -webkit-flex: 1.0;
     flex: 1.0;
-}
-
-.content .buttons .red {
-    color: #ff0000;
-
-	background-color: #000000;
-}
-.content .buttons .red:hover, .content .buttons .red:focus {
-    color: #ffffff;
-
-    background-color: #ff0000;
-}
-
-.content .buttons .green {
-    color: #00ff00;
-
-    background-color: #000000;
-}
-.content .buttons .green:hover, .content .buttons .green:focus {
-    color: #ffffff;
-
-    background-color: #00ff00;
-}
-
-.content .buttons .blue {
-    color: #0000ff;
-
-    background-color: #000000;
-}
-.content .buttons .blue:hover, .content .buttons .blue:focus {
-    color: #ffffff;
-
-    background-color: #0000ff;
 }

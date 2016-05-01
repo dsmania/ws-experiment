@@ -16,15 +16,19 @@
 
     <h:form id="colorForm" styleClass="content">
       <h1 class="title">#{messages.title}</h1>
-      <h:dataTable id="log" value="#{colorService.getLastColors(16)}" var="color" styleClass="log">
+      <h:dataTable id="log" value="#{colorClientService.getColors()}" var="color" styleClass="log">
         <h:column>
-          <h:outputFormat value="[#{color.dateTime}] #{color.session}: #{messages.containsKey(color.id) ? messages[color.id] : color.id}" style="color: #{color.rgb};" />
+          <h:outputFormat value="#{messages.containsKey(color.id) ? messages[color.id] : color.id}" style="color: #{color.rgb};" />
         </h:column>
       </h:dataTable>
       <div class="buttons">
-        <h:commandButton id="redButton" value="#{messages.red}" action="#{colorService.submitColor('FF0000')}" styleClass="red" />
-        <h:commandButton id="greenButton" value="#{messages.green}" action="#{colorService.submitColor('00FF00')}" styleClass="green" />
-        <h:commandButton id="blueButton" value="#{messages.blue}" action="#{colorService.submitColor('0000FF')}" styleClass="blue" />
+        <h:inputText id="countField" value="#{colorClientService.colorCount}" />
+        <h:commandButton id="countButton" value="#{messages.red}" action="#{colorClientService.readColors()}" />
+      </div>
+      <div class="buttons">
+        <h:inputText id="startField" value="#{colorClientService.startDateTime}" />
+        <h:inputText id="endField" value="#{colorClientService.endDateTime}" />
+        <h:commandButton id="datesButton" value="#{messages.green}" action="#{colorClientService.readColorsByDate()}" />
       </div>
     </h:form>
   </h:body>

@@ -48,10 +48,32 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+          <excludePackageNames>experiments.kilois.org</excludePackageNames>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>jaxws-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>wsimport</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <vmArgs>
+            <vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
+          </vmArgs>
+          <wsdlUrls>
+            <wsdlUrl>http://localhost:8080/ws-experiment/colors-ws?WSDL</wsdlUrl>
+          </wsdlUrls>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -84,8 +106,8 @@
             <artifactId>maven-embedded-glassfish-plugin</artifactId>
             <configuration>
               <ports>
-                <http-listener>8080</http-listener>
-                <https-listener>8181</https-listener>
+                <http-listener>18080</http-listener>
+                <https-listener>18181</https-listener>
               </ports>
             </configuration>
             <executions>

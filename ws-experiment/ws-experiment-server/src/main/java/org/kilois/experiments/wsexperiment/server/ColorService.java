@@ -44,16 +44,6 @@ public class ColorService implements Serializable {
     }
 
     @WebMethod(exclude = true)
-    public java.awt.Color submitColor(@NotNull String hexRgb) {
-        String rgb = (hexRgb.startsWith("#")) ? hexRgb.substring(1) : hexRgb;
-        java.awt.Color color = java.awt.Color.decode("0x" + rgb);
-        ENTRIES.add(new ColorEntry((COLOR_IDS.containsKey(color)) ? COLOR_IDS.get(color): "#" + rgb, color,
-                ((HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false)).getId()));
-
-        return color;
-    }
-
-    @WebMethod(exclude = true)
     public List<ColorEntry> getLastColors(String count) {
         return getLastColors(Integer.parseInt(count));
     }
@@ -71,6 +61,16 @@ public class ColorService implements Serializable {
         }
 
         return lastColors;
+    }
+
+    @WebMethod(exclude = true)
+    public java.awt.Color submitColor(@NotNull String hexRgb) {
+        String rgb = (hexRgb.startsWith("#")) ? hexRgb.substring(1) : hexRgb;
+        java.awt.Color color = java.awt.Color.decode("0x" + rgb);
+        ENTRIES.add(new ColorEntry((COLOR_IDS.containsKey(color)) ? COLOR_IDS.get(color): "#" + rgb, color,
+                ((HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false)).getId()));
+
+        return color;
     }
 
     @WebMethod
@@ -192,5 +192,14 @@ public class ColorService implements Serializable {
         }
 
     }
+
+public static void main(String... args) {
+    try {
+        System.out.println(new OffsetDateTimeStringAdapter().unmarshal("2015-01-01T00:00:00+00:00"));
+    } catch (Exception e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+    }
+}
 
 }
