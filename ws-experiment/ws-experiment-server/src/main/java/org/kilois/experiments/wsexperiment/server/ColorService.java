@@ -1,8 +1,7 @@
 package org.kilois.experiments.wsexperiment.server;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeParseException;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,10 +15,12 @@ import javax.jws.WebResult;
 import javax.jws.WebService;
 import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Named("colorService")
@@ -73,9 +74,9 @@ public class ColorService implements Serializable {
     }
 
     @WebMethod
-    @WebResult(name = "colors")
-    public Colors getColorsByCount(int count) {
-        Colors response = new Colors();
+    public @WebResult(name = "colors") ColorResponse getColorsByCount(@WebParam(name = "count") int count)
+            throws Exception {
+        ColorResponse response = new ColorResponse();
 
         int entriesSize = ENTRIES.size();
         int minIndex = entriesSize - count;
@@ -83,56 +84,35 @@ public class ColorService implements Serializable {
             minIndex = 0;
         }
         List<Color> colors = new ArrayList<Color>();
+        response.setColors(colors);
         for (int i = entriesSize - 1; i >= minIndex; i--) {
             ColorEntry entry = ENTRIES.get(i);
             colors.add(new Color(entry.getId(), entry.getRgb()));
-            response.setStart(entry.getDateTime());
+            response.setStart(OffsetDateTime.parse(entry.getDateTime(), ColorEntry.FORMATTER));
             if (response.getEnd() == null) {
-                response.setEnd(entry.getDateTime());
+                response.setEnd(OffsetDateTime.parse(entry.getDateTime(), ColorEntry.FORMATTER));
             }
         }
-        response.setColors(colors);
 
         return response;
     }
 
     @WebMethod
-    @WebResult(name = "colors")
-    public Colors getColorsByDateTime(@WebParam(name = "start") String start, @WebParam(name = "end") String end) {
-        Colors response = new Colors();
-
-        if (start == null) {
-            response.setError("Start date-time not specified");
-            return response;
-        }
-        LocalDateTime startDateTime;
-        try {
-            startDateTime = LocalDateTime.parse(start, ColorEntry.FORMATTER);
-        } catch (DateTimeParseException e) {
-            response.setError("Bad start date-time format");
-            return response;
-        }
-        if (end == null) {
-            response.setError("End date-time not specified");
-            return response;
-        }
-        LocalDateTime endDateTime;
-        try {
-            endDateTime = LocalDateTime.parse(end, ColorEntry.FORMATTER);
-        } catch (DateTimeParseException e) {
-            response.setError("Bad end date-time format");
-            return response;
-        }
+    public @WebResult(name = "colors") ColorResponse getColorsByDateTime(
+            @WebParam(name = "start") @XmlJavaTypeAdapter(OffsetDateTimeStringAdapter.class) @NotNull OffsetDateTime start,
+            @WebParam(name = "end") @XmlJavaTypeAdapter(OffsetDateTimeStringAdapter.class) @NotNull OffsetDateTime end)
+                    throws Exception {
+        ColorResponse response = new ColorResponse();
 
         response.setStart(start);
         response.setEnd(end);
 
         List<Color> colors = new ArrayList<Color>();
         for (ColorEntry entry : ENTRIES) {
-            if (entry.getTimestamp().compareTo(startDateTime) < 0) {
+            if (entry.getTimestamp().compareTo(start) < 0) {
                 continue;
             }
-            if (entry.getTimestamp().compareTo(endDateTime) > 0) {
+            if (entry.getTimestamp().compareTo(end) > 0) {
                 break;
             }
 
@@ -147,35 +127,30 @@ public class ColorService implements Serializable {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class ColorRequest implements Serializable  {
-
-        private static final long serialVersionUID = 7543888201462751101L;
-
-        private String startDateTime;
-
-        private String endDateTime;
-
-        private Integer count;
-
-    }
-
-
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @EqualsAndHashCode(of = { "start", "end" }, callSuper = false)
-    public static class Colors implements Serializable {
+    public static class ColorResponse implements Serializable {
 
         private static final long serialVersionUID = -1494087812886577950L;
 
-        private String start;
+        //@Getter(onMethod = @__({@XmlAttribute})) // Not working
+        private OffsetDateTime start;
 
-        private String end;
-
-        private String error;
+        //@Getter(onMethod = @__({@XmlAttribute})) // Not working
+        private OffsetDateTime end;
 
         //@Getter(onMethod = @__({@XmlElement(name = "color")})) // Not working
         private List<Color> colors;
+
+        @XmlAttribute
+        @XmlJavaTypeAdapter(OffsetDateTimeStringAdapter.class)
+        public OffsetDateTime getStart() {
+            return this.start;
+        }
+
+        @XmlAttribute
+        @XmlJavaTypeAdapter(OffsetDateTimeStringAdapter.class)
+        public OffsetDateTime getEnd() {
+            return this.end;
+        }
 
         @XmlElement(name = "color")
         public List<Color> getColors() {
@@ -183,6 +158,7 @@ public class ColorService implements Serializable {
         }
 
     }
+
 
     @Data
     @AllArgsConstructor
@@ -193,6 +169,27 @@ public class ColorService implements Serializable {
         private String id;
 
         private String rgb;
+
+    }
+
+
+    protected static class OffsetDateTimeStringAdapter extends XmlAdapter<String, OffsetDateTime> {
+
+        @Override
+        public OffsetDateTime unmarshal(String text) throws Exception {
+            if (text == null) {
+                return null;
+            }
+            return OffsetDateTime.parse(text, ColorEntry.FORMATTER);
+        }
+
+        @Override
+        public String marshal(OffsetDateTime dateTime) throws Exception {
+            if (dateTime == null) {
+                return null;
+            }
+            return dateTime.format(ColorEntry.FORMATTER);
+        }
 
     }
 

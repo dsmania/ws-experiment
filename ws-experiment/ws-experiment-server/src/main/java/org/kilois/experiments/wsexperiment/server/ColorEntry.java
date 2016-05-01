@@ -1,8 +1,9 @@
 package org.kilois.experiments.wsexperiment.server;
 
 import java.awt.Color;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,9 +15,11 @@ import lombok.NonNull;
 @NoArgsConstructor
 public class ColorEntry implements Comparable<ColorEntry> {
 
-	protected static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_DATE_TIME;
+    protected static final DateTimeFormatter FORMATTER = new DateTimeFormatterBuilder()
+            .append(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+            .append(DateTimeFormatter.ISO_LOCAL_DATE_TIME).toFormatter();
 
-	@NonNull
+    @NonNull
 	private String id;
 
 	@NonNull
@@ -26,10 +29,10 @@ public class ColorEntry implements Comparable<ColorEntry> {
 	private String session;
 
 	@NonNull
-	private LocalDateTime timestamp;
+	private OffsetDateTime timestamp;
 
 	public ColorEntry(@NotNull String id, @NotNull Color color, @NotNull String session) {
-		this(id, color, session, LocalDateTime.now());
+		this(id, color, session, OffsetDateTime.now());
 	}
 
 	public String getRgb() {
@@ -45,7 +48,7 @@ public class ColorEntry implements Comparable<ColorEntry> {
 	}
 
 	public void setDateTime(String dateTime) {
-		this.timestamp = LocalDateTime.parse(dateTime, FORMATTER);
+		this.timestamp = OffsetDateTime.parse(dateTime, FORMATTER);
 	}
 
 	@Override
