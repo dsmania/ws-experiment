@@ -71,6 +71,7 @@
     <webClientModuleId>${project.code}-web-client</webClientModuleId>
     <desktopClientModuleId>${project.code}-desktop-client</desktopClientModuleId>
 
+    <bsaf.version>1.9.2</bsaf.version>
     <cdi.version>1.1</cdi.version>
     <ejb.version>3.2</ejb.version>
     <el.version>3.0</el.version>
@@ -82,8 +83,12 @@
     <jsf.version>2.2</jsf.version>
     <junit.version>4.12</junit.version>
     <lombok.version>1.16.8</lombok.version>
+    <miglayout.version>5.0</miglayout.version>
     <servlet.version>3.1</servlet.version>
+    <swingx.version>1.6.5-1</swingx.version>
 
+    <build-helper-maven-plugin.version>1.10</build-helper-maven-plugin.version>
+    <exec-maven-plugin.version>1.4.0</exec-maven-plugin.version>
     <maven-clean-plugin.version>3.0.0</maven-clean-plugin.version>
     <maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
     <maven-ear-plugin.version>2.10.1</maven-ear-plugin.version>
@@ -112,6 +117,22 @@
         <artifactId>lombok</artifactId>
         <version>${lombok.version}</version>
         <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.jdesktop.bsaf</groupId>
+        <artifactId>bsaf</artifactId>
+        <version>${bsaf.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.swinglabs.swingx</groupId>
+        <artifactId>swingx-all</artifactId>
+        <version>${swingx.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.miglayout</groupId>
+        <artifactId>miglayout-swing</artifactId>
+        <version>${miglayout.version}</version>
       </dependency>
 
       <dependency>
@@ -179,6 +200,11 @@
           </configuration>
         </plugin>
         <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>build-helper-maven-plugin</artifactId>
+          <version>${build-helper-maven-plugin.version}</version>
+        </plugin>
+        <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
           <version>${maven-jar-plugin.version}</version>
@@ -241,6 +267,11 @@
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
+          <artifactId>exec-maven-plugin</artifactId>
+          <version>${exec-maven-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
           <artifactId>jaxws-maven-plugin</artifactId>
           <version>${jaxws-maven-plugin.version}</version>
         </plugin>
@@ -289,6 +320,52 @@
 
     <profile>
       <id>desktop-client</id>
+    </profile>
+
+    <profile>
+      <id>eclipse</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.eclipse.m2e</groupId>
+              <artifactId>lifecycle-mapping</artifactId>
+              <version>1.0.0</version>
+              <configuration>
+                <lifecycleMappingMetadata>
+                  <pluginExecutions>
+                    <pluginExecution>
+                      <pluginExecutionFilter>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <versionRange>${build-helper-maven-plugin.version}</versionRange>
+                        <goals>
+                          <goal>parse-version</goal>
+                          <goal>add-source</goal>
+                          <goal>maven-version</goal>
+                          <goal>add-resource</goal>
+                          <goal>add-test-resource</goal>
+                          <goal>add-test-source</goal>
+                        </goals>
+                      </pluginExecutionFilter>
+                      <action>
+                        <execute>
+                          <runOnConfiguration>true</runOnConfiguration>
+                          <runOnIncremental>true</runOnIncremental>
+                        </execute>
+                      </action>
+                    </pluginExecution>
+                  </pluginExecutions>
+                </lifecycleMappingMetadata>
+              </configuration>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
     </profile>
 
   </profiles>
