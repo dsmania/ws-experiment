@@ -38,23 +38,6 @@
         <artifactId>maven-compiler-plugin</artifactId>
       </plugin>
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>build-helper-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <phase>process-sources</phase>
-            <goals>
-              <goal>add-source</goal>
-            </goals>
-            <configuration>
-              <sources>
-                <source>${basedir}/target/generated-sources/wsimport</source>
-              </sources>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
       </plugin>
@@ -128,10 +111,10 @@
     </profile>
 
     <profile>
-      <id>wsimport</id>
+      <id>wsgen</id>
       <activation>
         <file>
-          <missing>${basedir}/target/generated-sources/wsimport</missing>
+          <missing>target/generated-sources/wsgen</missing>
         </file>
       </activation>
 
@@ -140,20 +123,26 @@
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>jaxws-maven-plugin</artifactId>
+            <dependencies>
+              <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>${serverModuleId}</artifactId>
+                <version>${project.version}</version>
+              </dependency>
+            </dependencies>
             <executions>
               <execution>
                 <goals>
-                  <goal>wsimport</goal>
+                  <goal>wsgen</goal>
                 </goals>
               </execution>
             </executions>
             <configuration>
+              <sei>org.kilois.experiements.wsexperiment.server.ColorService</sei>
+              <genWsdl>true</genWsdl>
               <vmArgs>
                 <vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
               </vmArgs>
-              <wsdlUrls>
-                <wsdlUrl>http://localhost:8080/ws-experiment/colors-ws?WSDL</wsdlUrl>
-              </wsdlUrls>
             </configuration>
           </plugin>
         </plugins>

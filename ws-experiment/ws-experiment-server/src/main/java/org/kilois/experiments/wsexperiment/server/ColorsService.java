@@ -23,10 +23,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Named("colorService")
+@Named("colorsService")
 @ApplicationScoped
-@WebService(serviceName = "colors-ws", portName = "colors-ws-port", targetNamespace = "org.kilois.experiments")
-public class ColorService implements Serializable {
+@WebService(serviceName = "colors-ws", portName = "colors-ws-port", targetNamespace = "http://experiments.kilois.org")
+public class ColorsService implements Serializable {
 
     private static final long serialVersionUID = 6085152634656601410L;
 
@@ -39,7 +39,7 @@ public class ColorService implements Serializable {
 
     private static final List<ColorEntry> ENTRIES = new ArrayList<ColorEntry>();
 
-    public ColorService() {
+    public ColorsService() {
         super();
     }
 
@@ -192,14 +192,5 @@ public class ColorService implements Serializable {
         }
 
     }
-
-public static void main(String... args) {
-    try {
-        System.out.println(new OffsetDateTimeStringAdapter().unmarshal("2015-01-01T00:00:00+00:00"));
-    } catch (Exception e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-    }
-}
 
 }

@@ -8,10 +8,10 @@ import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
 import javax.validation.constraints.Pattern;
-import experiments.kilois.org.Color;
-import experiments.kilois.org.ColorService;
-import experiments.kilois.org.ColorsWs;
-import experiments.kilois.org.Exception_Exception;
+import javax.xml.ws.WebServiceRef;
+import org.kilois.experiments.Color;
+import org.kilois.experiments.ColorsWs;
+import org.kilois.experiments.Exception_Exception;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -40,7 +40,8 @@ public class ColorClientService implements Serializable {
     @Getter
     private final List<Color> colors = new ArrayList<Color>();
 
-    private static ColorService COLOR_SERVICE = new ColorsWs().getColorsWsPort();
+    @WebServiceRef
+    private ColorsWs colorsService;
 
     public ColorClientService() {
         super();
@@ -49,7 +50,7 @@ public class ColorClientService implements Serializable {
     public String readColors() {
         this.colors.clear();
         try {
-            this.colors.addAll(COLOR_SERVICE.getColorsByCount(this.colorCount).getColor());
+            this.colors.addAll(colorsService.getColorsWsPort().getColorsByCount(this.colorCount).getColor());
         } catch (Exception_Exception e) {
             e.printStackTrace();
         }
@@ -60,7 +61,7 @@ public class ColorClientService implements Serializable {
     public String readColorsByDate() {
         this.colors.clear();
         try {
-            this.colors.addAll(COLOR_SERVICE.getColorsByDateTime(startDateTime, endDateTime).getColor());
+            this.colors.addAll(colorsService.getColorsWsPort().getColorsByDateTime(startDateTime, endDateTime).getColor());
         } catch (Exception_Exception e) {
             e.printStackTrace();
         }
