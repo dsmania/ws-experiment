@@ -25,7 +25,7 @@ import lombok.NoArgsConstructor;
 
 @Named("colorsService")
 @ApplicationScoped
-@WebService(serviceName = "colors-ws", portName = "colors-ws-port", targetNamespace = "http://experiments.kilois.org")
+@WebService(serviceName = "colors-ws", portName = "colors-ws-port", targetNamespace = "http://kilois.org/experiments")
 public class ColorsService implements Serializable {
 
     private static final long serialVersionUID = 6085152634656601410L;
@@ -74,7 +74,8 @@ public class ColorsService implements Serializable {
     }
 
     @WebMethod
-    public @WebResult(name = "colors") ColorResponse getColorsByCount(@WebParam(name = "count") int count)
+    public @WebResult(name = "colors") ColorResponse getColorsByCount(
+            @WebParam(name = "count") int count)
             throws Exception {
         ColorResponse response = new ColorResponse();
 

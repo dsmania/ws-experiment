@@ -56,7 +56,7 @@
             </goals>
             <configuration>
               <sources>
-                <source>${basedir}/target/generated-sources/wsimport</source>
+                <source>${project.basedir}/target/generated-sources/wsimport</source>
               </sources>
             </configuration>
           </execution>
@@ -118,7 +118,7 @@
       <id>wsimport</id>
       <activation>
         <file>
-          <missing>${basedir}/target/generated-sources/wsimport</missing>
+          <missing>target/generated-sources/wsimport</missing>
         </file>
       </activation>
 
