@@ -1,6 +1,7 @@
 package org.kilois.experiments.wsexperiment.server;
 
 import java.awt.Color;
+import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import javax.validation.constraints.NotNull;
@@ -12,7 +13,9 @@ import lombok.NonNull;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ColorEntry implements Comparable<ColorEntry> {
+public class ColorEntry implements Comparable<ColorEntry>, Serializable {
+
+    private static final long serialVersionUID = 7552447256640065070L;
 
     protected static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 

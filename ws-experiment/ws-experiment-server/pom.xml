@@ -28,10 +28,43 @@
   </dependencies>
 
   <build>
+    <sourceDirectory>${project.build.directory}/generated-sources/java-templates</sourceDirectory>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-wsdl-to-ws-jar</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <resources>
+                <resource>
+                  <directory>${project.basedir}/target/generated-sources/wsdl</directory>
+                </resource>
+              </resources>
+              <outputDirectory>${project.basedir}/target/classes-ws/META-INF/wsdl</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>templating-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>generate-filtered-sources</id>
+            <goals>
+              <goal>filter-sources</goal>
+            </goals>
+            <configuration>
+              <sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -40,18 +73,18 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jarsigner-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>package-ws</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration>
+              <classifier>ws</classifier>
+              <classesDirectory>${project.basedir}/target/classes-ws</classesDirectory>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -63,30 +96,45 @@
               <filtering>true</filtering>
             </webResource>
           </webResources>
+          <packagingExcludes>WEB-INF/wsdl/</packagingExcludes>
         </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-clean-plugin</artifactId>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>jaxws-maven-plugin</artifactId>
         <executions>
           <execution>
+            <id>wsgen</id>
+            <phase>process-classes</phase>
             <goals>
               <goal>wsgen</goal>
             </goals>
+            <configuration>
+              <sei>org.kilois.experiments.wsexperiment.server.ColorsService</sei>
+              <genWsdl>true</genWsdl>
+              <destDir>${project.basedir}/target/classes-ws</destDir>
+              <keep>true</keep>
+            </configuration>
+          </execution>
+          <execution>
+            <id>wsimport</id>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>wsimport</goal>
+            </goals>
+            <configuration>
+              <wsdlDirectory>${project.basedir}/target/generated-sources/wsdl</wsdlDirectory>
+              <wsdlFiles>
+                <wsdlFile>WsExperiment.wsdl</wsdlFile>
+              </wsdlFiles>
+              <destDir>${project.basedir}/target/classes-ws</destDir>
+              <xnocompile>false</xnocompile>
+              <vmArgs>
+                <vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
+              </vmArgs>
+            </configuration>
           </execution>
         </executions>
-        <configuration>
-          <sei>org.kilois.experiments.wsexperiment.server.ColorsService</sei>
-          <genWsdl>true</genWsdl>
-          <vmArgs>
-            <vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
-          </vmArgs>
-          <verbose>true</verbose>
-        </configuration>
       </plugin>
     </plugins>
   </build>
@@ -103,8 +151,7 @@
             <artifactId>maven-embedded-glassfish-plugin</artifactId>
             <configuration>
               <ports>
-                <http-listener>8080</http-listener>
-                <https-listener>8181</https-listener>
+                <http-listener>${serverPort}</http-listener>
               </ports>
             </configuration>
             <executions>

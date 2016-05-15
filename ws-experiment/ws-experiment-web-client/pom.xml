@@ -31,10 +31,6 @@
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-resources-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
       </plugin>
       <plugin>
@@ -67,10 +63,6 @@
             </webResource>
           </webResources>
         </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-clean-plugin</artifactId>
       </plugin>
     </plugins>
   </build>
@@ -109,78 +101,6 @@
         </plugins>
       </build>
     </profile>
-
-    <!--profile>
-      <id>wsgen</id>
-      <activation>
-        <file>
-          <missing>target/generated-sources/wsgen</missing>
-        </file>
-      </activation>
-
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>jaxws-maven-plugin</artifactId>
-            <dependencies>
-              <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>${serverModuleId}</artifactId>
-                <version>${project.version}</version>
-                <type>war</type>
-              </dependency>
-            </dependencies>
-            <executions>
-              <execution>
-                <phase>generate-sources</phase>
-                <goals>
-                  <goal>wsgen</goal>
-                </goals>
-              </execution>
-            </executions>
-            <configuration>
-              <sei>org.kilois.experiments.wsexperiment.server.ColorsService</sei>
-              <genWsdl>true</genWsdl>
-              <vmArgs>
-                <vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
-              </vmArgs>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-
-    <profile>
-      <id>wsgen-already-done</id>
-      <activation>
-        <file>
-          <exists>target/generated-sources/wsgen</exists>
-        </file>
-      </activation>
-
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>build-helper-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <phase>process-sources</phase>
-                <goals>
-                  <goal>add-source</goal>
-                </goals>
-                <configuration>
-                  <sources>
-                    <source>${project.basedir}/target/generated-sources/wsgen</source>
-                  </sources>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile-->
 
   </profiles>
 

@@ -67,41 +67,33 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
+    <wsName>colors-ws</wsName>
+    <wsPort>${wsName}-port</wsPort>
+    <wsNamespace>http://kilois.org/experiments</wsNamespace>
+    <wsContext>${project.code}</wsContext>
+    <serverPort>8080</serverPort>
+    <webClientPort>18080</webClientPort>
+
     <serverModuleId>${project.code}-server</serverModuleId>
     <webClientModuleId>${project.code}-web-client</webClientModuleId>
     <desktopClientModuleId>${project.code}-desktop-client</desktopClientModuleId>
 
     <bsaf.version>1.9.2</bsaf.version>
-    <cdi.version>1.1</cdi.version>
-    <ejb.version>3.2</ejb.version>
-    <el.version>3.0</el.version>
     <glassfish.version>4.1.1</glassfish.version>
     <java.version>1.8</java.version>
-    <javaee.version>7</javaee.version>
-    <javaee-api.version>7.0</javaee-api.version>
-    <javase.version>8</javase.version>
-    <jsf.version>2.2</jsf.version>
-    <junit.version>4.12</junit.version>
+    <java-ee.version>7.0</java-ee.version>
     <lombok.version>1.16.8</lombok.version>
     <miglayout.version>5.0</miglayout.version>
-    <servlet.version>3.1</servlet.version>
     <swingx.version>1.6.5-1</swingx.version>
 
-    <build-helper-maven-plugin.version>1.10</build-helper-maven-plugin.version>
     <exec-maven-plugin.version>1.4.0</exec-maven-plugin.version>
-    <maven-clean-plugin.version>3.0.0</maven-clean-plugin.version>
+    <jaxws-maven-plugin.version>2.4.1</jaxws-maven-plugin.version>
     <maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
-    <maven-ear-plugin.version>2.10.1</maven-ear-plugin.version>
-    <maven-ejb-plugin.version>2.5.1</maven-ejb-plugin.version>
     <maven-embedded-glassfish-plugin.version>${glassfish.version}</maven-embedded-glassfish-plugin.version>
     <maven-jar-plugin.version>2.6</maven-jar-plugin.version>
-    <maven-jarsigner-plugin.version>1.4</maven-jarsigner-plugin.version>
-    <maven-javadoc-plugin.version>2.10.3</maven-javadoc-plugin.version>
-    <jaxws-maven-plugin.version>2.4.1</jaxws-maven-plugin.version>
     <maven-resources-plugin.version>2.7</maven-resources-plugin.version>
-    <maven-source-plugin.version>3.0.0</maven-source-plugin.version>
-    <maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
     <maven-war-plugin.version>2.6</maven-war-plugin.version>
+    <templating-maven-plugin.version>1.0.0</templating-maven-plugin.version>
   </properties>
 
   <dependencyManagement>
@@ -109,7 +101,7 @@
       <dependency>
         <groupId>javax</groupId>
         <artifactId>javaee-api</artifactId>
-        <version>${javaee-api.version}</version>
+        <version>${java-ee.version}</version>
         <scope>provided</scope>
       </dependency>
       <dependency>
@@ -143,6 +135,12 @@
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
+        <artifactId>${serverModuleId}</artifactId>
+        <version>${project.version}</version>
+        <classifier>ws</classifier>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
         <artifactId>${webClientModuleId}</artifactId>
         <version>${project.version}</version>
         <type>war</type>
@@ -152,23 +150,10 @@
         <artifactId>${desktopClientModuleId}</artifactId>
         <version>${project.version}</version>
       </dependency>
-
-      <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>${junit.version}</version>
-        <scope>test</scope>
-      </dependency>
     </dependencies>
   </dependencyManagement>
 
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
+  <dependencies />
 
   <repositories />
 
@@ -181,14 +166,11 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-resources-plugin</artifactId>
           <version>${maven-resources-plugin.version}</version>
-          <executions>
-            <execution>
-              <phase>process-resources</phase>
-              <goals>
-                <goal>resources</goal>
-              </goals>
-            </execution>
-          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>templating-maven-plugin</artifactId>
+          <version>${templating-maven-plugin.version}</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -200,53 +182,14 @@
           </configuration>
         </plugin>
         <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>build-helper-maven-plugin</artifactId>
-          <version>${build-helper-maven-plugin.version}</version>
-        </plugin>
-        <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
           <version>${maven-jar-plugin.version}</version>
         </plugin>
         <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-jarsigner-plugin</artifactId>
-          <version>${maven-jarsigner-plugin.version}</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-javadoc-plugin</artifactId>
-          <version>${maven-javadoc-plugin.version}</version>
-          <executions>
-            <execution>
-              <id>attach-javadoc</id>
-              <goals>
-                <goal>jar</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-source-plugin</artifactId>
-          <version>${maven-source-plugin.version}</version>
-          <executions>
-            <execution>
-              <id>attach-sources</id>
-              <goals>
-                <goal>jar</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-ejb-plugin</artifactId>
-          <version>${maven-ejb-plugin.version}</version>
-          <configuration>
-            <ejbVersion>${ejb.version}</ejbVersion>
-          </configuration>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>jaxws-maven-plugin</artifactId>
+          <version>${jaxws-maven-plugin.version}</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -257,53 +200,17 @@
           </configuration>
         </plugin>
         <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-ear-plugin</artifactId>
-          <version>${maven-ear-plugin.version}</version>
-          <configuration>
-            <version>${javaee.version}</version>
-            <filtering>true</filtering>
-          </configuration>
+          <groupId>org.glassfish.embedded</groupId>
+          <artifactId>maven-embedded-glassfish-plugin</artifactId>
+          <version>${maven-embedded-glassfish-plugin.version}</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>exec-maven-plugin</artifactId>
           <version>${exec-maven-plugin.version}</version>
         </plugin>
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>jaxws-maven-plugin</artifactId>
-          <version>${jaxws-maven-plugin.version}</version>
-        </plugin>
-        <plugin>
-          <groupId>org.glassfish.embedded</groupId>
-          <artifactId>maven-embedded-glassfish-plugin</artifactId>
-          <version>${maven-embedded-glassfish-plugin.version}</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-clean-plugin</artifactId>
-          <version>${maven-clean-plugin.version}</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <version>${maven-surefire-plugin.version}</version>
-        </plugin>
       </plugins>
     </pluginManagement>
-
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <classpathDependencyExcludes>
-            <classpathDependencyExcludes>javax:javaee-api</classpathDependencyExcludes>
-          </classpathDependencyExcludes>
-        </configuration>
-      </plugin>
-    </plugins>
   </build>
 
   <reporting />
@@ -320,52 +227,6 @@
 
     <profile>
       <id>desktop-client</id>
-    </profile>
-
-    <profile>
-      <id>eclipse</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
-
-      <build>
-        <pluginManagement>
-          <plugins>
-            <plugin>
-              <groupId>org.eclipse.m2e</groupId>
-              <artifactId>lifecycle-mapping</artifactId>
-              <version>1.0.0</version>
-              <configuration>
-                <lifecycleMappingMetadata>
-                  <pluginExecutions>
-                    <pluginExecution>
-                      <pluginExecutionFilter>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>build-helper-maven-plugin</artifactId>
-                        <versionRange>${build-helper-maven-plugin.version}</versionRange>
-                        <goals>
-                          <goal>parse-version</goal>
-                          <goal>add-source</goal>
-                          <goal>maven-version</goal>
-                          <goal>add-resource</goal>
-                          <goal>add-test-resource</goal>
-                          <goal>add-test-source</goal>
-                        </goals>
-                      </pluginExecutionFilter>
-                      <action>
-                        <execute>
-                          <runOnConfiguration>true</runOnConfiguration>
-                          <runOnIncremental>true</runOnIncremental>
-                        </execute>
-                      </action>
-                    </pluginExecution>
-                  </pluginExecutions>
-                </lifecycleMappingMetadata>
-              </configuration>
-            </plugin>
-          </plugins>
-        </pluginManagement>
-      </build>
     </profile>
 
   </profiles>

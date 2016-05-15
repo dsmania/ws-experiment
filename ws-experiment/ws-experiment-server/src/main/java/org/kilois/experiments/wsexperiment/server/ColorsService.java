@@ -25,10 +25,11 @@ import lombok.NoArgsConstructor;
 
 @Named("colorsService")
 @ApplicationScoped
-@WebService(serviceName = "colors-ws", portName = "colors-ws-port", targetNamespace = "http://kilois.org/experiments")
+@WebService(name = "${wsName}", portName = "${wsPort}", targetNamespace = "${wsNamespace}",
+        serviceName = "${wsContext}")
 public class ColorsService implements Serializable {
 
-    private static final long serialVersionUID = 6085152634656601410L;
+    private static final long serialVersionUID = 1505828267607093142L;
 
     private static final Map<java.awt.Color, String> COLOR_IDS = new HashMap<java.awt.Color, String>();
     static {
@@ -174,7 +175,7 @@ public class ColorsService implements Serializable {
     }
 
 
-    protected static class OffsetDateTimeStringAdapter extends XmlAdapter<String, OffsetDateTime> {
+    public static class OffsetDateTimeStringAdapter extends XmlAdapter<String, OffsetDateTime> {
 
         @Override
         public OffsetDateTime unmarshal(String text) throws Exception {
