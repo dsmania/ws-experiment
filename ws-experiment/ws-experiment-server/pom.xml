@@ -125,7 +125,7 @@
             <configuration>
               <wsdlDirectory>${project.basedir}/target/generated-sources/wsdl</wsdlDirectory>
               <wsdlFiles>
-                <wsdlFile>WsExperiment.wsdl</wsdlFile>
+                <wsdlFile>ColorsWs.wsdl</wsdlFile>
               </wsdlFiles>
               <destDir>${project.basedir}/target/classes-ws</destDir>
               <xnocompile>false</xnocompile>
@@ -151,11 +151,15 @@
             <artifactId>maven-embedded-glassfish-plugin</artifactId>
             <configuration>
               <ports>
-                <http-listener>${serverPort}</http-listener>
+                <http-listener>${hostPort}</http-listener>
               </ports>
+              <systemProperties>
+                <property>glassfish.embedded.tmpdir=${project.rootdir}/target/glassfish</property>
+              </systemProperties>
             </configuration>
             <executions>
               <execution>
+                <id>run-server</id>
                 <goals>
                   <goal>deploy</goal>
                   <goal>run</goal>

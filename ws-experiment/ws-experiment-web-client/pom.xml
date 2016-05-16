@@ -25,6 +25,12 @@
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
     </dependency>
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>${serverModuleId}</artifactId>
+      <classifier>ws</classifier>
+    </dependency>
   </dependencies>
 
   <build>
@@ -36,21 +42,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jarsigner-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <configuration>
-          <excludePackageNames>experiments.kilois.org</excludePackageNames>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -75,16 +66,56 @@
       <build>
         <plugins>
           <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>copy-server-arifact</id>
+                <phase>pre-integration-test</phase>
+                <goals>
+                  <goal>copy</goal>
+                </goals>
+                <configuration>
+                  <artifactItems>
+                    <artifactItem>
+                      <groupId>${project.groupId}</groupId>
+                      <artifactId>${serverModuleId}</artifactId>
+                      <version>${project.version}</version>
+                      <type>war</type>
+                    </artifactItem>
+                  </artifactItems>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
             <groupId>org.glassfish.embedded</groupId>
             <artifactId>maven-embedded-glassfish-plugin</artifactId>
             <configuration>
               <ports>
-                <http-listener>18080</http-listener>
-                <https-listener>18181</https-listener>
+                <http-listener>${hostPort}</http-listener>
               </ports>
+              <systemProperties>
+                <property>glassfish.embedded.tmpdir=${project.rootdir}/target/glassfish</property>
+              </systemProperties>
             </configuration>
             <executions>
               <execution>
+                <id>run-server</id>
+                <phase>pre-integration-test</phase>
+                <goals>
+                  <goal>deploy</goal>
+                </goals>
+                <configuration>
+                  <name>${serverModuleId}</name>
+                  <app>${project.build.directory}/dependency/${serverModuleId}-${project.version}.war</app>
+                  <contextRoot>/${serverContext}</contextRoot>
+                  <autoDelete>true</autoDelete>
+                </configuration>
+              </execution>
+              <execution>
+                <id>run-client</id>
+                <phase>pre-integration-test</phase>
                 <goals>
                   <goal>deploy</goal>
                   <goal>run</goal>
@@ -92,7 +123,7 @@
                 <configuration>
                   <name>${project.artifactId}</name>
                   <app>${project.build.directory}/${project.build.finalName}.war</app>
-                  <contextRoot>/${project.code}-client</contextRoot>
+                  <contextRoot>/${webClientContext}</contextRoot>
                   <autoDelete>true</autoDelete>
                 </configuration>
               </execution>

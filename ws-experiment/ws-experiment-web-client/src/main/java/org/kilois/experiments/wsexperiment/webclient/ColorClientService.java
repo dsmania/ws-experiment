@@ -12,6 +12,7 @@ import javax.xml.ws.WebServiceRef;
 import org.kilois.experiments.Color;
 import org.kilois.experiments.ColorsWs;
 import org.kilois.experiments.Exception_Exception;
+import org.kilois.experiments.WsExperiment;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,7 +20,7 @@ import lombok.Setter;
 @ApplicationScoped
 public class ColorClientService implements Serializable {
 
-    private static final long serialVersionUID = -2364624475416285960L;
+    private static final long serialVersionUID = 3656197095359459158L;
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
@@ -40,8 +41,8 @@ public class ColorClientService implements Serializable {
     @Getter
     private final List<Color> colors = new ArrayList<Color>();
 
-    @WebServiceRef
-    private ColorsWs colorsService;
+    @WebServiceRef(wsdlLocation = "http://localhost:8080/ws-experiment/colors-ws?wsdl")
+    private WsExperiment colorsService;
 
     public ColorClientService() {
         super();
@@ -50,7 +51,7 @@ public class ColorClientService implements Serializable {
     public String readColors() {
         this.colors.clear();
         try {
-            this.colors.addAll(colorsService.getColorsWsPort().getColorsByCount(this.colorCount).getColor());
+            this.colors.addAll(colorsService.getColorsByCount(this.colorCount).getColor());
         } catch (Exception_Exception e) {
             e.printStackTrace();
         }
@@ -61,7 +62,7 @@ public class ColorClientService implements Serializable {
     public String readColorsByDate() {
         this.colors.clear();
         try {
-            this.colors.addAll(colorsService.getColorsWsPort().getColorsByDateTime(startDateTime, endDateTime).getColor());
+            this.colors.addAll(colorsService.getColorsByDateTime(startDateTime, endDateTime).getColor());
         } catch (Exception_Exception e) {
             e.printStackTrace();
         }

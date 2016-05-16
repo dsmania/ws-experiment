@@ -67,12 +67,13 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
+    <serviceName>colorsService</serviceName>
     <wsName>colors-ws</wsName>
     <wsPort>${wsName}-port</wsPort>
     <wsNamespace>http://kilois.org/experiments</wsNamespace>
-    <wsContext>${project.code}</wsContext>
-    <serverPort>8080</serverPort>
-    <webClientPort>18080</webClientPort>
+    <hostPort>8080</hostPort>
+    <serverContext>${project.code}</serverContext>
+    <webClientContext>${serverContext}-client</webClientContext>
 
     <serverModuleId>${project.code}-server</serverModuleId>
     <webClientModuleId>${project.code}-web-client</webClientModuleId>
@@ -89,6 +90,7 @@
     <exec-maven-plugin.version>1.4.0</exec-maven-plugin.version>
     <jaxws-maven-plugin.version>2.4.1</jaxws-maven-plugin.version>
     <maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
+    <maven-dependency-plugin.version>2.10</maven-dependency-plugin.version>
     <maven-embedded-glassfish-plugin.version>${glassfish.version}</maven-embedded-glassfish-plugin.version>
     <maven-jar-plugin.version>2.6</maven-jar-plugin.version>
     <maven-resources-plugin.version>2.7</maven-resources-plugin.version>
@@ -162,6 +164,11 @@
   <build>
     <pluginManagement>
       <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <version>${maven-dependency-plugin.version}</version>
+        </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-resources-plugin</artifactId>

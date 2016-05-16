@@ -23,10 +23,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Named("colorsService")
+@Named("${serviceName}")
 @ApplicationScoped
-@WebService(name = "${wsName}", portName = "${wsPort}", targetNamespace = "${wsNamespace}",
-        serviceName = "${wsContext}")
+@WebService(serviceName = "${wsName}", portName = "${wsPort}", targetNamespace = "${wsNamespace}",
+        name = "${serverContext}")
 public class ColorsService implements Serializable {
 
     private static final long serialVersionUID = 1505828267607093142L;
