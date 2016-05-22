@@ -1,4 +1,4 @@
-package org.kilois.experiments.wsexperiment.desktop;
+package org.kilois.experiments.wsexperiment.desktopclient;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -34,10 +34,10 @@ import org.jdesktop.application.SingleFrameApplication;
 import org.jdesktop.swingx.JXDatePicker;
 import org.jdesktop.swingx.JXErrorPane;
 import org.jdesktop.swingx.JXPanel;
-import experiments.kilois.org.Color;
-import experiments.kilois.org.ColorService;
-import experiments.kilois.org.ColorsWs;
-import experiments.kilois.org.Exception_Exception;
+import org.kilois.experiments.Color;
+import org.kilois.experiments.ColorException;
+import org.kilois.experiments.Colors;
+import org.kilois.experiments.ColorsWs;
 import net.miginfocom.swing.MigLayout;
 
 public class WsExperimentDesktopClient extends SingleFrameApplication {
@@ -55,7 +55,7 @@ public class WsExperimentDesktopClient extends SingleFrameApplication {
     private JSpinner endTimeSpinner;
     private JComboBox<ZoneOffset> endOffsetCombo;
 
-    private static ColorService COLOR_SERVICE;
+    private static Colors COLOR_SERVICE;
 
     public WsExperimentDesktopClient() {
         super();
@@ -64,7 +64,7 @@ public class WsExperimentDesktopClient extends SingleFrameApplication {
     protected void initialize(String[] args) {
         super.initialize(args);
 
-        COLOR_SERVICE = new ColorsWs().getColorsWsPort();
+        COLOR_SERVICE = new ColorsWs().getColorsPort();
     }
 
     @Override
@@ -138,7 +138,7 @@ public class WsExperimentDesktopClient extends SingleFrameApplication {
     public void byCount() {
         try {
             updateEntries(COLOR_SERVICE.getColorsByCount(((Integer) this.countField.getValue()).intValue()).getColor());
-        } catch (BadLocationException | Exception_Exception e) {
+        } catch (BadLocationException | ColorException e) {
             JXErrorPane.showDialog(e);
         }
     }
@@ -162,7 +162,7 @@ public class WsExperimentDesktopClient extends SingleFrameApplication {
         }
         try {
             updateEntries(COLOR_SERVICE.getColorsByDateTime(start.format(FORMATTER), end.format(FORMATTER)).getColor());
-        } catch (BadLocationException | Exception_Exception e) {
+        } catch (BadLocationException | ColorException e) {
             JXErrorPane.showDialog(e);
         }
     }

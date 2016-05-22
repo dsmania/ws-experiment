@@ -21,10 +21,12 @@
           <h:outputFormat value="[#{color.dateTime}] #{color.session}: #{messages.containsKey(color.id) ? messages[color.id] : color.id}" style="color: #{color.rgb};" />
         </h:column>
       </h:dataTable>
-      <div class="buttons">
-        <h:commandButton id="redButton" value="#{messages.red}" action="#{colorsService.submitColor('FF0000')}" styleClass="red" />
-        <h:commandButton id="greenButton" value="#{messages.green}" action="#{colorsService.submitColor('00FF00')}" styleClass="green" />
-        <h:commandButton id="blueButton" value="#{messages.blue}" action="#{colorsService.submitColor('0000FF')}" styleClass="blue" />
+      <div class="controls">
+        <div class="buttons">
+          <h:commandButton id="redButton" value="#{messages.red}" action="#{colorsService.submitColor('FF0000')}" styleClass="red" />
+          <h:commandButton id="greenButton" value="#{messages.green}" action="#{colorsService.submitColor('00FF00')}" styleClass="green" />
+          <h:commandButton id="blueButton" value="#{messages.blue}" action="#{colorsService.submitColor('0000FF')}" styleClass="blue" />
+        </div>
       </div>
     </h:form>
   </h:body>

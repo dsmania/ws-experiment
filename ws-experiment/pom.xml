@@ -39,6 +39,10 @@
     </developer>
   </developers>
 
+  <prerequisites>
+    <maven>3.0</maven>
+  </prerequisites>
+
   <modules>
     <module>ws-experiment-server</module>
     <module>ws-experiment-web-client</module>
@@ -67,13 +71,13 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-    <serviceName>colorsService</serviceName>
-    <wsName>colors-ws</wsName>
-    <wsPort>${wsName}-port</wsPort>
+    <wsName>colors</wsName>
+    <wsService>colors-ws</wsService>
+    <wsPort>colors-port</wsPort>
     <wsNamespace>http://kilois.org/experiments</wsNamespace>
     <hostPort>8080</hostPort>
     <serverContext>${project.code}</serverContext>
-    <webClientContext>${serverContext}-client</webClientContext>
+    <webClientContext>${project.code}-client</webClientContext>
 
     <serverModuleId>${project.code}-server</serverModuleId>
     <webClientModuleId>${project.code}-web-client</webClientModuleId>
@@ -87,13 +91,12 @@
     <miglayout.version>5.0</miglayout.version>
     <swingx.version>1.6.5-1</swingx.version>
 
-    <exec-maven-plugin.version>1.4.0</exec-maven-plugin.version>
+    <exec-maven-plugin.version>1.5.0</exec-maven-plugin.version>
     <jaxws-maven-plugin.version>2.4.1</jaxws-maven-plugin.version>
     <maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
     <maven-dependency-plugin.version>2.10</maven-dependency-plugin.version>
     <maven-embedded-glassfish-plugin.version>${glassfish.version}</maven-embedded-glassfish-plugin.version>
-    <maven-jar-plugin.version>2.6</maven-jar-plugin.version>
-    <maven-resources-plugin.version>2.7</maven-resources-plugin.version>
+    <maven-replacer-plugin.version>1.5.3</maven-replacer-plugin.version>
     <maven-war-plugin.version>2.6</maven-war-plugin.version>
     <templating-maven-plugin.version>1.0.0</templating-maven-plugin.version>
   </properties>
@@ -137,12 +140,6 @@
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>${serverModuleId}</artifactId>
-        <version>${project.version}</version>
-        <classifier>ws</classifier>
-      </dependency>
-      <dependency>
-        <groupId>${project.groupId}</groupId>
         <artifactId>${webClientModuleId}</artifactId>
         <version>${project.version}</version>
         <type>war</type>
@@ -170,9 +167,9 @@
           <version>${maven-dependency-plugin.version}</version>
         </plugin>
         <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-resources-plugin</artifactId>
-          <version>${maven-resources-plugin.version}</version>
+          <groupId>com.google.code.maven-replacer-plugin</groupId>
+          <artifactId>replacer</artifactId>
+          <version>${maven-replacer-plugin.version}</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
@@ -187,11 +184,6 @@
             <source>${java.version}</source>
             <target>${java.version}</target>
           </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-jar-plugin</artifactId>
-          <version>${maven-jar-plugin.version}</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
@@ -210,11 +202,77 @@
           <groupId>org.glassfish.embedded</groupId>
           <artifactId>maven-embedded-glassfish-plugin</artifactId>
           <version>${maven-embedded-glassfish-plugin.version}</version>
+          <configuration>
+            <ports>
+              <http-listener>${hostPort}</http-listener>
+            </ports>
+            <systemProperties>
+              <property>glassfish.embedded.tmpdir=${project.rootdir}/target/glassfish</property>
+            </systemProperties>
+          </configuration>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>exec-maven-plugin</artifactId>
           <version>${exec-maven-plugin.version}</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.eclipse.m2e</groupId>
+          <artifactId>lifecycle-mapping</artifactId>
+          <version>1.0.0</version>
+          <configuration>
+            <lifecycleMappingMetadata>
+              <pluginExecutions>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <versionRange>${maven-dependency-plugin.version}</versionRange>
+                    <goals>
+                      <goal>copy</goal>
+                      <goal>unpack</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <execute>
+                      <runOnConfiguration>true</runOnConfiguration>
+                      <runOnIncremental>true</runOnIncremental>
+                    </execute>
+                  </action>
+                </pluginExecution>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>com.google.code.maven-replacer-plugin</groupId>
+                    <artifactId>replacer</artifactId>
+                    <versionRange>${maven-replacer-plugin.version}</versionRange>
+                    <goals>
+                      <goal>replace</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <execute>
+                      <runOnConfiguration>true</runOnConfiguration>
+                      <runOnIncremental>true</runOnIncremental>
+                    </execute>
+                  </action>
+                </pluginExecution>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.glassfish.embedded</groupId>
+                    <artifactId>maven-embedded-glassfish-plugin</artifactId>
+                    <versionRange>${maven-embedded-glassfish-plugin.version}</versionRange>
+                    <goals>
+                      <goal>deploy</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore />
+                  </action>
+                </pluginExecution>
+              </pluginExecutions>
+            </lifecycleMappingMetadata>
+          </configuration>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -225,15 +283,15 @@
   <profiles>
 
     <profile>
-      <id>server</id>
+      <id>run-server</id>
     </profile>
 
     <profile>
-      <id>web-client</id>
+      <id>run-web-client</id>
     </profile>
 
     <profile>
-      <id>desktop-client</id>
+      <id>run-desktop-client</id>
     </profile>
 
   </profiles>

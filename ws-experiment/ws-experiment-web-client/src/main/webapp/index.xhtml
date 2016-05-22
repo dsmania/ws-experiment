@@ -16,19 +16,35 @@
 
     <h:form id="colorForm" styleClass="content">
       <h1 class="title">#{messages.title}</h1>
-      <h:dataTable id="log" value="#{colorClientService.getColors()}" var="color" styleClass="log">
+      <h:dataTable id="log" value="#{colorsClient.getColors()}" var="color" styleClass="log">
         <h:column>
           <h:outputFormat value="#{messages.containsKey(color.id) ? messages[color.id] : color.id}" style="color: #{color.rgb};" />
         </h:column>
       </h:dataTable>
-      <div class="buttons">
-        <h:inputText id="countField" value="#{colorClientService.colorCount}" />
-        <h:commandButton id="countButton" value="#{messages.red}" action="#{colorClientService.readColors()}" />
+      <div class="controls">
+        <div class="fields">
+          <h:inputText id="countField" value="#{colorsClient.colorCount}" />
+        </div>
+        <div class="buttons">
+          <h:commandButton id="countButton" value="#{messages.byCount}" action="#{colorsClient.readColors()}" />
+        </div>
       </div>
-      <div class="buttons">
-        <h:inputText id="startField" value="#{colorClientService.startDateTime}" />
-        <h:inputText id="endField" value="#{colorClientService.endDateTime}" />
-        <h:commandButton id="datesButton" value="#{messages.green}" action="#{colorClientService.readColorsByDate()}" />
+      <div class="controls">
+        <div class="fields">
+          <h:inputText id="startDateField" value="#{colorsClient.startDate}" />
+          <h:inputText id="startTimeField" value="#{colorsClient.startTime}" />
+          <h:selectOneMenu value="#{colorsClient.startOffset}">
+            <f:selectItems value="#{colorsClient.offsets}" />
+          </h:selectOneMenu>
+          <h:inputText id="endDateField" value="#{colorsClient.endDate}" />
+          <h:inputText id="endTimeField" value="#{colorsClient.endTime}" />
+          <h:selectOneMenu value="#{colorsClient.endOffset}">
+            <f:selectItems value="#{colorsClient.offsets}" />
+          </h:selectOneMenu>
+        </div>
+        <div class="buttons">
+          <h:commandButton id="datesButton" value="#{messages.byDates}" action="#{colorsClient.readColorsByDate()}" />
+        </div>
       </div>
     </h:form>
   </h:body>

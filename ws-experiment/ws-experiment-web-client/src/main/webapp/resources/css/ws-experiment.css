@@ -1,6 +1,6 @@
 @CHARSET "UTF-8";
 
-* {
+*, *:before, *:after {
     margin: 0px;
     border: 0px;
     padding: 0px;
@@ -22,6 +22,10 @@
 html {
     width: 100%;
     height: 100%;
+
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 body {
@@ -66,32 +70,39 @@ h1 {
     font-weight: bold;
 }
 
-input[type=button], input[type=submit], input[type=reset], button {
+input, button {
     min-width: 100px;
     min-height: 60px;
 
-    padding: 5px 15px;
-
-    color: #606060;
+    color: #000000;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 18px;
     font-weight: bold;
     text-align: center;
 
-    background-color: #a0a0a0;
+    background-color: #ffffff;
     box-shadow: 0px 0px 0px 0px rgba(127, 127, 127, 0.25);
 
-    cursor: pointer;
-
     transition: color 0.25s ease-in-out, background-color 0.25s ease-in-out, box-shadow 0.25s ease-in-out;
+}
+input[type=button], input[type=submit], input[type=reset], button {
+    padding: 5px 15px;
+
+	color: #606060;
+
+    background-color: #a0a0a0;
+
+    cursor: pointer;
+}
+input:hover, button:hover, input:focus, button:focus {
+    outline: none;
+
+    box-shadow: 0px 0px 5px 5px rgba(127, 127, 127, 0.25);
 }
 input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover, button:hover, input[type=button]:focus, input[type=submit]:focus, input[type=reset]:focus, button:focus {
     color: #a0a0a0;
 
-    outline: none;
-
     background-color: #606060;
-    box-shadow: 0px 0px 5px 5px rgba(127, 127, 127, 0.25);
 }
 
 .content {
@@ -124,7 +135,7 @@ input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover, but
     box-shadow: 0px 0px 5px 5px rgba(127, 127, 127, 0.25);
 }
 
-.content .title {
+.title {
     min-height: 60px;
 
     display: block;
@@ -137,7 +148,7 @@ input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover, but
 	background-color: #000000;
 }
 
-.content .log {
+.log {
     display: block;
 
 	-moz-box-flex: 1.0;
@@ -155,27 +166,25 @@ input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover, but
     user-select: text;
     cursor: text;
 }
-.content .log * {
+.log * {
     -webkit-user-select: text;
     -moz-user-select: text;
     user-select: text;
 	cursor: text;
 }
-.content .log * ::-moz-selection {
+.log * ::-moz-selection {
 	color: #ffffff;
 
     background: #404040;
 }
-.content .log * ::selection {
+.log * ::selection {
     color: #ffffff;
 
     background: #404040;
 }
 
-.content .buttons {
-    padding-top: 5px;
-
-	display: -webkit-box;
+.controls {
+    display: -webkit-box;
     display: -webkit-flex;
     display: flex;
     -webkit-box-orient: horizontal;
@@ -188,9 +197,50 @@ input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover, but
     -webkit-align-items: stretch;
     align-items: stretch;
 
-	background-color: #000000;
+    padding-top: 5px;
+
+    background-color: #000000;
 }
-.content .buttons * {
+.controls :not(:first-child) {
+    margin-left: 5px;
+}
+
+.fields {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+    -webkit-box-align: stretch;
+    -webkit-align-items: stretch;
+    align-items: stretch;
+}
+.buttons * {
+    -moz-box-flex: 1.0;
+    box-flex: 1.0;
+    -webkit-flex: 1.0;
+    flex: 1.0;
+}
+
+.buttons {
+	display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+    -webkit-box-align: stretch;
+    -webkit-align-items: stretch;
+    align-items: stretch;
+}
+.buttons * {
     -moz-box-flex: 1.0;
     box-flex: 1.0;
     -webkit-flex: 1.0;

@@ -23,10 +23,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Named("${serviceName}")
+@Named("colorsService")
 @ApplicationScoped
-@WebService(serviceName = "${wsName}", portName = "${wsPort}", targetNamespace = "${wsNamespace}",
-        name = "${serverContext}")
+@WebService(name = "${wsName}", serviceName = "${wsService}", portName = "${wsPort}", targetNamespace = "${wsNamespace}")
 public class ColorsService implements Serializable {
 
     private static final long serialVersionUID = 1505828267607093142L;
@@ -68,7 +67,7 @@ public class ColorsService implements Serializable {
     public java.awt.Color submitColor(@NotNull String hexRgb) {
         String rgb = (hexRgb.startsWith("#")) ? hexRgb.substring(1) : hexRgb;
         java.awt.Color color = java.awt.Color.decode("0x" + rgb);
-        ENTRIES.add(new ColorEntry((COLOR_IDS.containsKey(color)) ? COLOR_IDS.get(color): "#" + rgb, color,
+        ENTRIES.add(new ColorEntry((COLOR_IDS.containsKey(color)) ? COLOR_IDS.get(color) : "#" + rgb, color,
                 ((HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false)).getId()));
 
         return color;
@@ -77,52 +76,60 @@ public class ColorsService implements Serializable {
     @WebMethod
     public @WebResult(name = "colors") ColorResponse getColorsByCount(
             @WebParam(name = "count") int count)
-            throws Exception {
-        ColorResponse response = new ColorResponse();
+            throws ColorException {
+        try {
+            ColorResponse response = new ColorResponse();
 
-        int entriesSize = ENTRIES.size();
-        int minIndex = entriesSize - count;
-        if (minIndex < 0) {
-            minIndex = 0;
-        }
-        List<Color> colors = new ArrayList<Color>();
-        response.setColors(colors);
-        for (int i = entriesSize - 1; i >= minIndex; i--) {
-            ColorEntry entry = ENTRIES.get(i);
-            colors.add(new Color(entry.getId(), entry.getRgb()));
-            response.setStart(OffsetDateTime.parse(entry.getDateTime(), ColorEntry.FORMATTER));
-            if (response.getEnd() == null) {
-                response.setEnd(OffsetDateTime.parse(entry.getDateTime(), ColorEntry.FORMATTER));
+            int entriesSize = ENTRIES.size();
+            int minIndex = entriesSize - count;
+            if (minIndex < 0) {
+                minIndex = 0;
             }
-        }
+            List<Color> colors = new ArrayList<Color>();
+            response.setColors(colors);
+            for (int i = entriesSize - 1; i >= minIndex; i--) {
+                ColorEntry entry = ENTRIES.get(i);
+                colors.add(new Color(entry.getId(), entry.getRgb()));
+                response.setStart(OffsetDateTime.parse(entry.getDateTime(), ColorEntry.FORMATTER));
+                if (response.getEnd() == null) {
+                    response.setEnd(OffsetDateTime.parse(entry.getDateTime(), ColorEntry.FORMATTER));
+                }
+            }
 
-        return response;
+            return response;
+        } catch (Throwable cause) {
+            throw new ColorException("Error getting colors by count", cause);
+        }
     }
 
     @WebMethod
     public @WebResult(name = "colors") ColorResponse getColorsByDateTime(
             @WebParam(name = "start") @XmlJavaTypeAdapter(OffsetDateTimeStringAdapter.class) @NotNull OffsetDateTime start,
             @WebParam(name = "end") @XmlJavaTypeAdapter(OffsetDateTimeStringAdapter.class) @NotNull OffsetDateTime end)
-                    throws Exception {
-        ColorResponse response = new ColorResponse();
+                    throws ColorException {
+        try {
+            ColorResponse response = new ColorResponse();
 
-        response.setStart(start);
-        response.setEnd(end);
+            response.setStart(start);
+            response.setEnd(end);
 
-        List<Color> colors = new ArrayList<Color>();
-        for (ColorEntry entry : ENTRIES) {
-            if (entry.getTimestamp().compareTo(start) < 0) {
-                continue;
+            List<Color> colors = new ArrayList<Color>();
+            for (ColorEntry entry : ENTRIES) {
+                if (entry.getTimestamp().compareTo(start) < 0) {
+                    continue;
+                }
+                if (entry.getTimestamp().compareTo(end) > 0) {
+                    break;
+                }
+
+                colors.add(new Color(entry.getId(), entry.getRgb()));
             }
-            if (entry.getTimestamp().compareTo(end) > 0) {
-                break;
-            }
+            response.setColors(colors);
 
-            colors.add(new Color(entry.getId(), entry.getRgb()));
+            return response;
+        } catch (Throwable cause) {
+            throw new ColorException("Error getting colors by dates", cause);
         }
-        response.setColors(colors);
-
-        return response;
     }
 
 

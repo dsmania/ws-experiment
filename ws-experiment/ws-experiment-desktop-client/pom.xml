@@ -43,39 +43,67 @@
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
-        <artifactId>build-helper-maven-plugin</artifactId>
+        <artifactId>jaxws-maven-plugin</artifactId>
         <executions>
           <execution>
-            <phase>process-sources</phase>
+            <id>create-ws-classes</id>
+            <phase>generate-sources</phase>
             <goals>
-              <goal>add-source</goal>
+              <goal>wsimport</goal>
             </goals>
             <configuration>
-              <sources>
-                <source>${project.basedir}/target/generated-sources/wsimport</source>
-              </sources>
+              <wsdlUrls>
+                <wsdlUrl>http://localhost:${hostPort}/${serverContext}/${wsService}?wsdl</wsdlUrl>
+              </wsdlUrls>
+              <sourceDestDir>${project.basedir}/src/main/wsimport</sourceDestDir>
+              <vmArgs>
+                <vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
+              </vmArgs>
             </configuration>
           </execution>
         </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-server-artifact</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>${serverModuleId}</artifactId>
+                  <version>${project.version}</version>
+                  <type>war</type>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jarsigner-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <configuration>
-          <excludePackageNames>experiments.kilois.org</excludePackageNames>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
+        <groupId>org.glassfish.embedded</groupId>
+        <artifactId>maven-embedded-glassfish-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>run-server</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>deploy</goal>
+            </goals>
+            <configuration>
+              <name>${serverModuleId}</name>
+              <app>${project.build.directory}/dependency/${serverModuleId}-${project.version}.war</app>
+              <contextRoot>/${serverContext}</contextRoot>
+              <autoDelete>true</autoDelete>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
@@ -83,7 +111,7 @@
   <profiles>
 
     <profile>
-      <id>desktop-client</id>
+      <id>run-desktop-client</id>
 
       <build>
         <plugins>
@@ -92,48 +120,21 @@
             <artifactId>exec-maven-plugin</artifactId>
             <executions>
               <execution>
-                <phase>verify</phase>
+                <id>execute-client</id>
+                <phase>integration-test</phase>
                 <goals>
-                  <goal>java</goal>
+                  <goal>exec</goal>
                 </goals>
                 <configuration>
-                  <mainClass>org.kilois.experiments.wsexperiment.desktop.WsExperimentDesktopClient</mainClass>
+                  <executable>java</executable>
+                  <arguments>
+                    <argument>-classpath</argument>
+                    <classpath />
+                    <argument>org.kilois.experiments.wsexperiment.desktopclient.WsExperimentDesktopClient</argument>
+                  </arguments>
                 </configuration>
               </execution>
             </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-
-    <profile>
-      <id>wsimport</id>
-      <activation>
-        <file>
-          <missing>target/generated-sources/wsimport</missing>
-        </file>
-      </activation>
-
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>jaxws-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <goals>
-                  <goal>wsimport</goal>
-                </goals>
-              </execution>
-            </executions>
-            <configuration>
-              <vmArgs>
-                <vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
-              </vmArgs>
-              <wsdlUrls>
-                <wsdlUrl>http://localhost:8080/ws-experiment/colors-ws?WSDL</wsdlUrl>
-              </wsdlUrls>
-            </configuration>
           </plugin>
         </plugins>
       </build>

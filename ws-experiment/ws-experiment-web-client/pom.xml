@@ -25,23 +25,41 @@
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
     </dependency>
-
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>${serverModuleId}</artifactId>
-      <classifier>ws</classifier>
-    </dependency>
   </dependencies>
 
   <build>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>unpack-server-artifact</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>unpack</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>${serverModuleId}</artifactId>
+                  <version>${project.version}</version>
+                  <type>war</type>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <excludes>
+            <exclude>org/kilois/experiments/wsexperiment/server/**/*.java</exclude>
+          </excludes>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -53,7 +71,78 @@
               <filtering>true</filtering>
             </webResource>
           </webResources>
+          <packagingExcludes>WEB-INF/wsdl/</packagingExcludes>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>jaxws-maven-plugin</artifactId>
+        <dependencies>
+          <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>${serverModuleId}</artifactId>
+            <version>${project.version}</version>
+            <type>war</type>
+          </dependency>
+        </dependencies>
+        <executions>
+          <execution>
+            <id>generate-wsdl</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>wsgen</goal>
+            </goals>
+            <configuration>
+              <sei>org.kilois.experiments.wsexperiment.server.ColorsService</sei>
+              <genWsdl>true</genWsdl>
+              <xnocompile>true</xnocompile>
+              <keep>true</keep>
+              <args>
+                <arg>-cp ${project.basedir}/target/dependency/WEB-INF/classes</arg>
+              </args>
+            </configuration>
+          </execution>
+          <execution>
+            <id>create-ws-classes</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>wsimport</goal>
+            </goals>
+            <configuration>
+              <wsdlDirectory>${project.basedir}/target/generated-sources/wsdl</wsdlDirectory>
+              <wsdlFiles>
+                <wsdlFile>ColorsWs.wsdl</wsdlFile>
+              </wsdlFiles>
+              <destDir>${project.basedir}/target/classes-ws</destDir>
+              <xnocompile>false</xnocompile>
+              <vmArgs>
+                <vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
+              </vmArgs>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>com.google.code.maven-replacer-plugin</groupId>
+        <artifactId>replacer</artifactId>
+        <executions>
+          <execution>
+            <id>set-wsdl-url</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>replace</goal>
+            </goals>
+            <configuration>
+              <file>${project.basedir}/target/generated-sources/wsdl/ColorsWs.wsdl</file>
+              <replacements>
+                <replacement>
+                  <token>REPLACE_WITH_ACTUAL_URL</token>
+                  <value>http://localhost:${hostPort}/${serverContext}/${wsService}?wsdl</value>
+                </replacement>
+              </replacements>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
@@ -61,7 +150,7 @@
   <profiles>
 
     <profile>
-      <id>web-client</id>
+      <id>run-web-client</id>
 
       <build>
         <plugins>
@@ -70,7 +159,7 @@
             <artifactId>maven-dependency-plugin</artifactId>
             <executions>
               <execution>
-                <id>copy-server-arifact</id>
+                <id>copy-server-artifact</id>
                 <phase>pre-integration-test</phase>
                 <goals>
                   <goal>copy</goal>
@@ -91,14 +180,6 @@
           <plugin>
             <groupId>org.glassfish.embedded</groupId>
             <artifactId>maven-embedded-glassfish-plugin</artifactId>
-            <configuration>
-              <ports>
-                <http-listener>${hostPort}</http-listener>
-              </ports>
-              <systemProperties>
-                <property>glassfish.embedded.tmpdir=${project.rootdir}/target/glassfish</property>
-              </systemProperties>
-            </configuration>
             <executions>
               <execution>
                 <id>run-server</id>

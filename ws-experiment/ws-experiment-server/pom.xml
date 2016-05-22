@@ -31,27 +31,6 @@
     <sourceDirectory>${project.build.directory}/generated-sources/java-templates</sourceDirectory>
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-resources-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>copy-wsdl-to-ws-jar</id>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <configuration>
-              <resources>
-                <resource>
-                  <directory>${project.basedir}/target/generated-sources/wsdl</directory>
-                </resource>
-              </resources>
-              <outputDirectory>${project.basedir}/target/classes-ws/META-INF/wsdl</outputDirectory>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>templating-maven-plugin</artifactId>
         <executions>
@@ -72,22 +51,6 @@
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>package-ws</id>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-            <configuration>
-              <classifier>ws</classifier>
-              <classesDirectory>${project.basedir}/target/classes-ws</classesDirectory>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
         <configuration>
           <webResources>
@@ -96,45 +59,7 @@
               <filtering>true</filtering>
             </webResource>
           </webResources>
-          <packagingExcludes>WEB-INF/wsdl/</packagingExcludes>
         </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>jaxws-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>wsgen</id>
-            <phase>process-classes</phase>
-            <goals>
-              <goal>wsgen</goal>
-            </goals>
-            <configuration>
-              <sei>org.kilois.experiments.wsexperiment.server.ColorsService</sei>
-              <genWsdl>true</genWsdl>
-              <destDir>${project.basedir}/target/classes-ws</destDir>
-              <keep>true</keep>
-            </configuration>
-          </execution>
-          <execution>
-            <id>wsimport</id>
-            <phase>process-classes</phase>
-            <goals>
-              <goal>wsimport</goal>
-            </goals>
-            <configuration>
-              <wsdlDirectory>${project.basedir}/target/generated-sources/wsdl</wsdlDirectory>
-              <wsdlFiles>
-                <wsdlFile>ColorsWs.wsdl</wsdlFile>
-              </wsdlFiles>
-              <destDir>${project.basedir}/target/classes-ws</destDir>
-              <xnocompile>false</xnocompile>
-              <vmArgs>
-                <vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
-              </vmArgs>
-            </configuration>
-          </execution>
-        </executions>
       </plugin>
     </plugins>
   </build>
@@ -142,21 +67,13 @@
   <profiles>
 
     <profile>
-      <id>server</id>
+      <id>run-server</id>
 
       <build>
         <plugins>
           <plugin>
             <groupId>org.glassfish.embedded</groupId>
             <artifactId>maven-embedded-glassfish-plugin</artifactId>
-            <configuration>
-              <ports>
-                <http-listener>${hostPort}</http-listener>
-              </ports>
-              <systemProperties>
-                <property>glassfish.embedded.tmpdir=${project.rootdir}/target/glassfish</property>
-              </systemProperties>
-            </configuration>
             <executions>
               <execution>
                 <id>run-server</id>
@@ -167,7 +84,7 @@
                 <configuration>
                   <name>${project.artifactId}</name>
                   <app>${project.build.directory}/${project.build.finalName}.war</app>
-                  <contextRoot>/${project.code}</contextRoot>
+                  <contextRoot>/${serverContext}</contextRoot>
                   <autoDelete>true</autoDelete>
                 </configuration>
               </execution>

@@ -2,4 +2,5 @@
 /.project
 /.metadata/
 /.settings/
+/src/main/wsimport/
 /target/
