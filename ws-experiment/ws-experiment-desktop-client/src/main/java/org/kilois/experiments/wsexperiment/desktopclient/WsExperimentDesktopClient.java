@@ -44,7 +44,7 @@ public class WsExperimentDesktopClient extends SingleFrameApplication {
 
     protected static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
     protected static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
-    protected static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm:ss.SSS");
+    protected static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm:ss");
 
     private JTextPane entriesEditor;
     private JFormattedTextField countField;
@@ -72,7 +72,8 @@ public class WsExperimentDesktopClient extends SingleFrameApplication {
         ActionMap actions = getContext().getActionMap();
 
         Date endDate = new Date();
-        Date startDate = new Date(endDate.getTime() - 60000);
+        endDate.setTime(endDate.getTime() / 1000 * 1000);
+        Date startDate = new Date(endDate.getTime() - 300000);
 
         SortedSet<ZoneOffset> offsetsSet = new TreeSet<ZoneOffset>();
         LocalDateTime someDateTime = LocalDateTime.now();
