@@ -31,13 +31,25 @@
       </div>
       <div class="controls">
         <div class="fields">
-          <h:inputText id="startDateField" value="#{colorsClient.startDate}" />
-          <h:inputText id="startTimeField" value="#{colorsClient.startTime}" />
+          <h:inputText id="startDateField" value="#{colorsClient.startDate}" styleClass="#{component.valid ? '' : 'error'}">
+            <f:validateRegex pattern="(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)" />
+            <f:ajax event="keyup" execute="@this" render="startDateField" />
+          </h:inputText>
+          <h:inputText id="startTimeField" value="#{colorsClient.startTime}" styleClass="#{component.valid ? '' : 'error'}">
+            <f:validateRegex pattern="(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(\.\d{1,9})?" />
+            <f:ajax event="keyup" execute="@this" render="startTimeField" />
+          </h:inputText>
           <h:selectOneMenu value="#{colorsClient.startOffset}">
             <f:selectItems value="#{colorsClient.offsets}" />
           </h:selectOneMenu>
-          <h:inputText id="endDateField" value="#{colorsClient.endDate}" />
-          <h:inputText id="endTimeField" value="#{colorsClient.endTime}" />
+          <h:inputText id="endDateField" value="#{colorsClient.endDate}" styleClass="#{component.valid ? '' : 'error'}">
+            <f:validateRegex pattern="(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)" />
+            <f:ajax event="keyup" execute="@this" render="endDateField" />
+          </h:inputText>
+          <h:inputText id="endTimeField" value="#{colorsClient.endTime}" styleClass="#{component.valid ? '' : 'error'}">
+            <f:validateRegex pattern="(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(\.\d{1,9})?" />
+            <f:ajax event="keyup" execute="@this" render="endTimeField" />
+          </h:inputText>
           <h:selectOneMenu value="#{colorsClient.endOffset}">
             <f:selectItems value="#{colorsClient.offsets}" />
           </h:selectOneMenu>

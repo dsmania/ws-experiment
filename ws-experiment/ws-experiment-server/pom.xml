@@ -29,6 +29,7 @@
 
   <build>
     <sourceDirectory>${project.build.directory}/generated-sources/java-templates</sourceDirectory>
+
     <plugins>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>

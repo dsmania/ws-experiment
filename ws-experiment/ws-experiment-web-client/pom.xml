@@ -28,7 +28,24 @@
   </dependencies>
 
   <build>
+    <sourceDirectory>${project.build.directory}/generated-sources/java-templates</sourceDirectory>
+
     <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>templating-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>generate-filtered-sources</id>
+            <goals>
+              <goal>filter-sources</goal>
+            </goals>
+            <configuration>
+              <sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>

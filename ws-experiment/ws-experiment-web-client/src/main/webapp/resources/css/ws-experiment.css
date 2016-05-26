@@ -5,27 +5,21 @@
     border: 0px;
     padding: 0px;
 
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
     box-sizing: border-box;
 
     cursor: default;
 }
 
 :not(input) {
-    -webkit-touch-callout: none;
     -webkit-user-select: none;
     -moz-user-select: none;
+    -ms-user-select: none;
     user-select: none;
 }
 
 html {
     width: 100%;
     height: 100%;
-
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
 }
 
 body {
@@ -37,17 +31,9 @@ body {
     min-width: 100%;
     min-height: 100%;
 
-    display: -webkit-box;
-    display: -webkit-flex;
     display: flex;
-    -webkit-box-orient: vertical;
-    -webkit-flex-direction: column;
     flex-direction: column;
-    -webkit-box-pack: center;
-    -webkit-justify-content: center;
     justify-content: center;
-    -webkit-box-align: center;
-    -webkit-align-items: center;
     align-items: center;
 
     font-family: Arial, Helvetica, sans-serif;
@@ -70,31 +56,42 @@ h1 {
     font-weight: bold;
 }
 
-input, button {
-    min-width: 100px;
+input, button, select {
     min-height: 60px;
 
-    color: #000000;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 18px;
     font-weight: bold;
     text-align: center;
 
+    color: #000000;
+
     background-color: #ffffff;
     box-shadow: 0px 0px 0px 0px rgba(127, 127, 127, 0.25);
 
     transition: color 0.25s ease-in-out, background-color 0.25s ease-in-out, box-shadow 0.25s ease-in-out;
+
+    cursor: text;
 }
 input[type=button], input[type=submit], input[type=reset], button {
     padding: 5px 15px;
 
-	color: #606060;
+    color: #606060;
 
     background-color: #a0a0a0;
 
     cursor: pointer;
 }
-input:hover, button:hover, input:focus, button:focus {
+select {
+    padding: 5px 15px;
+
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+
+    cursor: pointer;
+}
+input:hover, button:hover, select:hover, input:focus, button:focus, select:focus {
     outline: none;
 
     box-shadow: 0px 0px 5px 5px rgba(127, 127, 127, 0.25);
@@ -106,25 +103,14 @@ input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover, but
 }
 
 .content {
-    min-width: 300px;
-    min-height: 300px;
+    width: 750px;
+    min-height: 510px;
 
-    display: -webkit-box;
-    display: -webkit-flex;
     display: flex;
-    -webkit-box-orient: vertical;
-    -webkit-flex-direction: column;
     flex-direction: column;
-    -webkit-box-pack: justify;
-    -webkit-justify-content: space-between;
     justify-content: space-between;
-    -webkit-box-align: stretch;
-    -webkit-align-items: stretch;
     align-items: stretch;
-    -moz-box-flex: 0.0;
-    box-flex: 0.0;
-    -webkit-flex: 0.0;
-    flex: 0.0;
+    flex: 0 1;
 
     border: 5px solid #000000;
 
@@ -143,37 +129,36 @@ input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover, but
 
     padding-bottom: 5px;
 
-	color: #ffffff;
+    color: #ffffff;
 
-	background-color: #000000;
+    background-color: #000000;
 }
 
 .log {
     display: block;
 
-	-moz-box-flex: 1.0;
-    box-flex: 1.0;
-    -webkit-flex: 1.0;
-    flex: 1.0;
+    flex: 1 1;
 
     font-family: Courier, monospace;
     text-align: left;
 
-	background-color: #c0c0c0;
+    background-color: #c0c0c0;
 
     -webkit-user-select: text;
     -moz-user-select: text;
+    -ms-user-select: text;
     user-select: text;
     cursor: text;
 }
 .log * {
     -webkit-user-select: text;
     -moz-user-select: text;
+    -ms-user-select: text;
     user-select: text;
-	cursor: text;
+    cursor: text;
 }
 .log * ::-moz-selection {
-	color: #ffffff;
+    color: #ffffff;
 
     background: #404040;
 }
@@ -184,17 +169,9 @@ input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover, but
 }
 
 .controls {
-    display: -webkit-box;
-    display: -webkit-flex;
     display: flex;
-    -webkit-box-orient: horizontal;
-    -webkit-flex-direction: row;
     flex-direction: row;
-    -webkit-box-pack: justify;
-    -webkit-justify-content: space-between;
     justify-content: space-between;
-    -webkit-box-align: stretch;
-    -webkit-align-items: stretch;
     align-items: stretch;
 
     padding-top: 5px;
@@ -206,43 +183,72 @@ input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover, but
 }
 
 .fields {
-    display: -webkit-box;
-    display: -webkit-flex;
     display: flex;
-    -webkit-box-orient: horizontal;
-    -webkit-flex-direction: row;
-    flex-direction: row;
-    -webkit-box-pack: justify;
-    -webkit-justify-content: space-between;
+    flex-flow: row wrap;
     justify-content: space-between;
-    -webkit-box-align: stretch;
-    -webkit-align-items: stretch;
     align-items: stretch;
+    flex: 1 1;
 }
-.buttons * {
-    -moz-box-flex: 1.0;
-    box-flex: 1.0;
-    -webkit-flex: 1.0;
-    flex: 1.0;
+.fields * {
+    flex: 2 1;
+}
+.fields :nth-child(n+4) {
+    margin-top: 5px;
+}
+.fields :nth-child(3n+4) {
+    margin-left: 0px;
+}
+.fields :nth-child(3n) {
+    flex: 1 1;
+    page-break-after: always;
 }
 
 .buttons {
-	display: -webkit-box;
-    display: -webkit-flex;
+    min-width: 25%;
+
     display: flex;
-    -webkit-box-orient: horizontal;
-    -webkit-flex-direction: row;
     flex-direction: row;
-    -webkit-box-pack: justify;
-    -webkit-justify-content: space-between;
     justify-content: space-between;
-    -webkit-box-align: stretch;
-    -webkit-align-items: stretch;
     align-items: stretch;
+    flex: 1 1 25%;
 }
 .buttons * {
-    -moz-box-flex: 1.0;
-    box-flex: 1.0;
-    -webkit-flex: 1.0;
-    flex: 1.0;
+    flex: 1 1;
+}
+
+.content .buttons .red {
+    color: #ff0000;
+
+    background-color: #000000;
+}
+.content .buttons .red:hover, .content .buttons .red:focus {
+    color: #ffffff;
+
+    background-color: #ff0000;
+}
+
+.content .buttons .green {
+    color: #00ff00;
+
+    background-color: #000000;
+}
+.content .buttons .green:hover, .content .buttons .green:focus {
+    color: #ffffff;
+
+    background-color: #00ff00;
+}
+
+.content .buttons .blue {
+    color: #0000ff;
+
+    background-color: #000000;
+}
+.content .buttons .blue:hover, .content .buttons .blue:focus {
+    color: #ffffff;
+
+    background-color: #0000ff;
+}
+
+.error {
+    color: #bf0000;
 }
