@@ -9,12 +9,12 @@
 
   <name>WS Experiment</name>
   <description>Experiment with web services</description>
-  <url>https://github.com/dsmania/ws-experiment</url>
+  <url>https://github.com/dsmania/ws-experiment/</url>
   <inceptionYear>2015</inceptionYear>
 
   <organization>
     <name>Kilois</name>
-    <url>http://www.kilois.org</url>
+    <url>http://www.kilois.org/</url>
   </organization>
 
   <licenses>
@@ -31,7 +31,7 @@
       <name>Yago Méndez Vidal</name>
       <email>dsmania@kilois.org</email>
       <organization>Kilois</organization>
-      <organizationUrl>http://www.kilois.org</organizationUrl>
+      <organizationUrl>http://www.kilois.org/</organizationUrl>
       <roles>
         <role>Developer</role>
       </roles>
@@ -52,12 +52,12 @@
   <scm>
     <connection>scm:git:git@github.com:dsmania/ws-experiment.git</connection>
     <developerConnection>scm:git:git@github.com:dsmania/ws-experiment.git</developerConnection>
-    <url>https://github.com/dsmania/ws-experiment</url>
+    <url>https://github.com/dsmania/ws-experiment/</url>
   </scm>
 
   <issueManagement>
     <system>GitHub</system>
-    <url>https://github.com/dsmania/ws-experiment/issues</url>
+    <url>https://github.com/dsmania/ws-experiment/issues/</url>
   </issueManagement>
 
   <ciManagement />
