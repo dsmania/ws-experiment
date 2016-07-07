@@ -35,6 +35,10 @@ mvn clean integration-test -Prun-web-client
 
 This process simulates how a web application would feed from a web service running on the same host and be developed from a provided WSDL. This is a typical case of an enterprise development.
 
+A web will be deployed in [http://localhost:8080/ws-experiment-client](http://localhost:8080/ws-experiment-client) for querying the web service in the server by getting the entries in a given count or interval.
+
+Please, note that any time the example is run a new set of colors must be submitted.
+
 ![Web client](readme/ws-experiment-web-client.png)
 
 The process will follow these steps:
@@ -53,6 +57,10 @@ mvn clean integration-test -Prun-desktop-client
 ```
 
 This process simulates how an standalone desktop client would use an external running web service. This is a typical case of an utility application and similar to a phone app.
+
+This execution will pop a desktop application that would request the already running web service.
+
+Please, note that any time the example is run a new set of colors must be submitted.
 
 ![Desktop client](readme/ws-experiment-desktop-client.png)
 
