@@ -21,7 +21,7 @@
     <license>
       <name>BSD 3-clause</name>
       <url>${project.basedir}/LICENSE</url>
-      <distribution>manual</distribution>
+      <distribution>repo</distribution>
     </license>
   </licenses>
 
