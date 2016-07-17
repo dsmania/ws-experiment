@@ -19,7 +19,7 @@
 
   <licenses>
     <license>
-      <name>BSD 3-clause</name>
+      <name>BSD 3-Clause</name>
       <url>${project.basedir}/LICENSE</url>
       <distribution>repo</distribution>
     </license>
