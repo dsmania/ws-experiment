@@ -3,7 +3,7 @@ Experiment with web services
 
 This experiment presents a simple way to develop a web service in Java EE 7 and two different approaches for creating clients.
 
-The project uses [Maven](http://maven.apache.org) and makes use of [GlassFish Embedded Plugin](https://embedded-glassfish.java.net) for running the examples making it simple to run with no extra installations.
+The project uses [Maven](http://maven.apache.org/) and makes use of [GlassFish Embedded Plugin](https://embedded-glassfish.java.net/) for running the examples making it simple to run with no extra installations.
 
 For the demonstrating the mechanics a simple web will be provided where you can select red, green or blue buttons and register your entries on the server. Then clients can be fed with the web service provided.
 
